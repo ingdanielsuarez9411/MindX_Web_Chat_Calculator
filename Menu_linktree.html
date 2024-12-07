@@ -6,150 +6,148 @@
   <title>Document</title>
 </head>
 <body>
-  <div id="linktree">
-    
-    <div class="profile-picture">
-      
-     <!--- Profile image --->
-      <img src="https://heiannemarit.no/codepen/portfolio_fill_B.png">
-    </div>
-    
-    <!--- Profile --->
-    <div class="profile">
-      Hi! My name is AnneM 
-      <br/>and this is my LinkTree.
-    </div>
-    
-     <!--- Links: No buttons since a tag around buttons is not good 💅 --->
-    <div class="links">
-      <a class="button" href="#">PORTFOLIO</a>
-      <a class="button" href="#">SKETCHBLOG</a>
-     </div>
-    
-     <!--- Socials --->
-    <div class="socials">
-      <a href="" target="_new">Instagram</a> + 
-      <a href="" target="_new">Twitter</a>
-    </div>
-    
-  </div>
+  <main>
+    <header>
+      <img src="https://res.cloudinary.com/bobby20/image/upload/v1645577140/display_photo_kazcfh.png" alt="Linktree photo" />
+      <h3>Ezihe Godswill</h3>
+      <span>Frontend software engineer</span>
+    </header>
+    <nav class="linktree-nav">
+      <ul>
+        <li>
+          <a href="#">
+            <div class="linktree-box">
+              <div class="icon-box" style="--color: 195, 53%, 79%">🌐</div>
+              <div>
+                <h5>Portfolio</h5>
+                <span>Find me on the web</span>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <div class="linktree-box">
+              <div class="icon-box" style="--color: 0, 100%, 50%">❤</div>
+              <div>
+                <h5>Twitter</h5>
+                <span>Connect with me</span>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <div class="linktree-box">
+              <div class="icon-box" style="--color: 44, 100%, 53%">⚡</div>
+              <div>
+                <h5>Codepen</h5>
+                <span>See my demos </span>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <div class="linktree-box" style="--color: 110, 91%, 40%">
+              <div class="icon-box">👨🏾‍💻</div>
+              <div>
+                <h5>LinkedIn</h5>
+                <span>Let's work</span>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </main>
   <body>
 <style>
-  * {
-  margin: 0;
+ @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
+
+*,
+*::before,
+::after {
   padding: 0;
+  margin: 0;
 }
 
-
-:root {
-  --white: #E0E1E9;
-  --black: #373F51;
-  --yellow: #F7F052;
-  --blue: #008DD5;
-  --red: #F56476;
+html {
+  font-size: 100%;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 body {
-  /* 
-  You can insert a background image.
-  Keep a background color! */
-
-  /*
-  background-image: url("");
-  background-position: top left;
-  background-size: cover;
-  */
-
-  background: var(--black);
-  display: flex;
-  justify-content: center;
-  
-  font-family: 'Helvetica', 'Arial', 'sans-serif' ;
-  font-size: 20px;
-  font-weight: 200;
-  color: var(--black);
-}
-
-#linktree {
-  background: white;
-  border-radius: 50px 50px 50px 50px;
-  max-width: 500px;
-  padding: 3em;
-  margin: 20px 0px 20px 0px;
+  font-size: 0.94rem;
+  font-family: Poppins, Noto Sans, sans-serif;
   text-align: center;
+  line-height: 1.5;
+  background: #f8f8f8;
 }
 
-.profile-picture {  
-  padding: 2em 1em 1em 1em;
-  margin: 0;
+main {
+  padding: 12vh 0;
 }
 
-.profile-picture img {
-  overflow: hidden;
-  background: var(--black);
-  border-radius: 100%;
-  height: 200px;
-  width: 200px;
+img[alt="Linktree photo"] {
+  --scale: 164px;
+  width: var(--scale);
+  height: var(--scale);
+  border-radius: 24px;
 }
 
-.profile {
-  padding: 0.5em 2em 2em 2em;
-  line-height: 1.3em;
-  font-size: 1.3em;
+img[alt="Linktree photo"] + h3 {
+  margin: 16px 0 0px;
 }
 
-.links {
+.linktree-nav {
+  margin: 40px auto 0;
+  width: 95%;
+  max-width: 700px;
 }
 
-.links .button {
-  display: block;
-  background: var(--black);
-  border: 2px solid var(--black);
-  color: white;
-  
-  font-weight: 400;
-  font-size: 1.1em;
-  letter-spacing: 0.1em;
+.linktree-nav ul {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+}
+
+.linktree-nav a {
   text-decoration: none;
- 
-  margin: 20px 0px 0px 0px;
-  border-radius: 50px;
-  padding: 15px 0px 15px 0px;
-  width: 100%;
+  color: inherit;
 }
 
-.links .button:hover {
-  border: 2px solid var(--black);
-  background:none;
-  color: var(--black);
-  text-decoration: none;
-  transition: 0.3s ease-in-out;
+.linktree-box {
+  display: flex;
+  align-items: center;
+  text-align: start;
+  padding: 12px 12px;
+  border: 1px solid #ebebeb;
+  border-radius: 8px;
+  background: #fff;
 }
 
-.socials {
-    padding: 1.5em 2em 1em 2em;
+.linktree-box .icon-box {
+  --scale: 56px;
+  width: var(--scale);
+  height: var(--scale);
+  font-size: 1.25rem;
+  background: hsl(var(--color), 30%);
+  color: hsl(var(--color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  margin-right: 16px;
 }
 
-.socials a {
-  color: var(--black);
-  transition: 0.3s ease-in-out;
-}
-
-.socials a:hover {
-  color: var(--red);
-  text-decoration: none;
-}
-
- /* Mobile */
-
-@media only screen and (max-width: 767px) {
-  body {
-  #linktree {
-  margin-top: 0px;
-  border-radius: 0px;
-}
+@media (min-width: 600px) {
+  .linktree-nav ul {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
+
 </style>
 </html>
 
