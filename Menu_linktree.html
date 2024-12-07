@@ -1,132 +1,157 @@
-<div class="container">
-  <div class="head__section">
-    <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fGF2YXRhcnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="">
-    <p>I'm a full stack web developer</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="linktree">
+    
+    <div class="profile-picture">
+      
+     <!--- Profile image --->
+      <img src="https://heiannemarit.no/codepen/portfolio_fill_B.png">
+    </div>
+    
+    <!--- Profile --->
+    <div class="profile">
+      Hi! My name is AnneM 
+      <br/>and this is my LinkTree.
+    </div>
+    
+     <!--- Links: No buttons since a tag around buttons is not good 💅 --->
+    <div class="links">
+      <a class="button" href="#">PORTFOLIO</a>
+      <a class="button" href="#">SKETCHBLOG</a>
+     </div>
+    
+     <!--- Socials --->
+    <div class="socials">
+      <a href="" target="_new">Instagram</a> + 
+      <a href="" target="_new">Twitter</a>
+    </div>
+    
   </div>
-  <div class="social__links">
-    <ul id="item">
-      <li class="instagram"><a href="#">
-          <i class="fa fa-instagram"></i>
-          <span>
-            <h3>@coderider</h3>
-            <p>Follow me for more interesting web development projects.</p>
-          </span>
-        </a></li>
-      <li class="youtube"><a href="#">
-          <i class="fa fa-youtube"></i>
-          <span>
-            <h3>coderider</h3>
-            <p>Like share and subscribe to our channel.</p>
-          </span>
-        </a></li>
-      <li class="telegram"><a href="#">
-          <i class="fa fa-telegram"></i>
-          <span>
-            <h3>coderider</h3>
-            <p>Download free source code on telegram.</p>
-          </span>
-        </a></li>
-      <li class="github"><a href="#">
-          <i class="fa fa-github"></i>
-          <span>
-            <h3>coderider</h3>
-            <p>Download free source code on github.</p>
-          </span>
-        </a></li>
-    </ul>
-  </div>
-</div>
-
+  <body>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    list-style: none;
+  * {
+  margin: 0;
+  padding: 0;
 }
-a{
-    text-decoration: none;
-}
-body{
-    height: 100vh;
-    display: grid;
-    place-items: center;
-    background: #000000;
-    font-family: 'Nunito', sans-serif;
-}
-.container{
-    width: 30em;
-}
-.head__section img{
-    display: block;
-    margin: 0 auto;
-    height: 5rem;
-    width: 5rem;
-    object-fit: cover;
-    border-radius: 50%;
-}
-.head__section p{
-    text-align: center;
-    color: #fff;
-}
-.social__links ul li{
-    width: 100%;
-    margin: 1.2rem 0;
-    padding: 0.4rem 0.8rem;
-    background: rgba( 255, 255, 255, 0.1 );
-    backdrop-filter: blur( 0px );
-    border-radius: 5px;
-    transition: background 0.25s;
-    transform-style: preserve-3d;
-    perspective: 500px;
-    box-shadow: 0 0 0.8rem  rgba(255, 255, 255, .12);
-}
-.js-tilt-glare{
-    border-radius: 5px;
-}
-.social__links ul li a{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    color: #ffff;
-    font-size: 1rem;
-}
-.social__links ul li a i{
-    text-align: center;
-    line-height: 4rem;
-    font-size: 1.8rem;
-    text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
-    transform: scale(1.4) translateZ(50px);
-    transition: 0.25s;
-}
-.social__links ul li a span{
-    line-height: 1.4rem;
-}
-.social__links ul .instagram:hover{
-    background: #fd5949;
-}
-.social__links ul .youtube:hover{
-    background:#FF0000;
-}
-.social__links ul .telegram:hover{
-    background:#0088cc;
-}
-.social__links ul .github:hover{
-    background: #333;
-} 
-@media only screen and (max-width: 549px) {
-    .container{
-        width: 88vw;
-    }
-  }
-</style>
 
-<script>
-  VanillaTilt.init(document.querySelectorAll(".social__links ul li"), {
-		max: 10,
-		speed: 800,
-        glare: true,
-        "max-glare": 1
-	});
-</script>
+
+:root {
+  --white: #E0E1E9;
+  --black: #373F51;
+  --yellow: #F7F052;
+  --blue: #008DD5;
+  --red: #F56476;
+}
+
+body {
+  /* 
+  You can insert a background image.
+  Keep a background color! */
+
+  /*
+  background-image: url("");
+  background-position: top left;
+  background-size: cover;
+  */
+
+  background: var(--black);
+  display: flex;
+  justify-content: center;
+  
+  font-family: 'Helvetica', 'Arial', 'sans-serif' ;
+  font-size: 20px;
+  font-weight: 200;
+  color: var(--black);
+}
+
+#linktree {
+  background: white;
+  border-radius: 50px 50px 50px 50px;
+  max-width: 500px;
+  padding: 3em;
+  margin: 20px 0px 20px 0px;
+  text-align: center;
+}
+
+.profile-picture {  
+  padding: 2em 1em 1em 1em;
+  margin: 0;
+}
+
+.profile-picture img {
+  overflow: hidden;
+  background: var(--black);
+  border-radius: 100%;
+  height: 200px;
+  width: 200px;
+}
+
+.profile {
+  padding: 0.5em 2em 2em 2em;
+  line-height: 1.3em;
+  font-size: 1.3em;
+}
+
+.links {
+}
+
+.links .button {
+  display: block;
+  background: var(--black);
+  border: 2px solid var(--black);
+  color: white;
+  
+  font-weight: 400;
+  font-size: 1.1em;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+ 
+  margin: 20px 0px 0px 0px;
+  border-radius: 50px;
+  padding: 15px 0px 15px 0px;
+  width: 100%;
+}
+
+.links .button:hover {
+  border: 2px solid var(--black);
+  background:none;
+  color: var(--black);
+  text-decoration: none;
+  transition: 0.3s ease-in-out;
+}
+
+.socials {
+    padding: 1.5em 2em 1em 2em;
+}
+
+.socials a {
+  color: var(--black);
+  transition: 0.3s ease-in-out;
+}
+
+.socials a:hover {
+  color: var(--red);
+  text-decoration: none;
+}
+
+ /* Mobile */
+
+@media only screen and (max-width: 450px) {
+  body {
+  #linktree {
+  margin-top: 0px;
+  border-radius: 0px;
+}
+  }
+}
+</style>
+</html>
+
+
+
