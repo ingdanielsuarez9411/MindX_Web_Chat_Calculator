@@ -3,342 +3,666 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - Daniel Esteban Suarez Poveda</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" xintegrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoVxd5POll+TDHwzcG8AEby3soTRQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" xintegrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Dashboard Contact Center - Universidad Externado de Colombia</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* --- ESTILOS GENERALES Y FUENTES --- */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* bg-gray-100 */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
         }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        /* --- HEADER Y TABS --- */
+        .header {
+            background: linear-gradient(135deg, #002e19 0%, #004d2b 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 46, 25, 0.3);
+            text-align: center;
         }
-        .animate-fadeInUp {
-            animation: fadeInUp 0.6s ease-out forwards;
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(135deg, #002e19 0%, #004d2b 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .tab-button {
+            padding: 18px 30px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: white;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+            position: relative;
+        }
+        .tab-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .tab-button.active {
+            border-bottom: 4px solid #00ff88;
+            background-color: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- CONTENEDORES Y TARJETAS --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid #002e19;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        .card h2 {
+            color: #002e19;
+            font-size: 1.3em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .card .chart-container, .card .chart-container-small {
+            cursor: pointer; /* Indica que los gráficos son clickables */
+        }
+
+        /* --- KPIs Y MÉTRICAS --- */
+        .kpi {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #002e19, #007a4a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 1em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .metric-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-left: 4px solid #004d2b;
+            font-size: 0.95em;
+        }
+
+        /* --- GRÁFICOS Y CONTENEDORES --- */
+        .chart-container {
+            position: relative;
+            height: 320px;
+            margin-top: 15px;
+        }
+        .chart-container-small {
+            position: relative;
+            height: 180px;
+            margin-top: 15px;
+        }
+        
+        /* --- ESTILOS PARA LA VENTANA MODAL --- */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1001; /* Encima de todo */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 85%;
+            height: 85%;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+        .close-modal {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 35px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .close-modal:hover,
+        .close-modal:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* --- FILTROS Y OTROS ELEMENTOS --- */
+        .filter-controls {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .filter-controls label {
+            color: #002e19;
+            font-weight: 600;
+        }
+        .filter-controls select, .filter-controls input[type="date"] {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+        .filter-controls select:focus, .filter-controls input[type="date"]:focus {
+            outline: none;
+            border-color: #002e19;
+        }
+        .filter-controls button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #002e19, #004d2b);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .filter-controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 46, 25, 0.3);
+        }
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #c3cfe2, transparent);
+            margin: 40px 0;
         }
         .section-title {
-            font-size: 1.5rem; /* text-2xl */
-            font-weight: 600; /* font-semibold */
-            color: #1e3a8a; /* text-blue-800 */
-            margin-bottom: 1rem; /* mb-4 */
-            padding-bottom: 0.5rem; /* pb-2 */
-            border-bottom: 2px solid #3b82f6; /* border-blue-500 */
+            font-size: 1.8em;
+            color: #002e19;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
         }
-        .job-title {
-            font-size: 1.125rem; /* text-lg */
-            font-weight: 600; /* font-semibold */
-            color: #1f2937; /* text-gray-800 */
-        }
-        .company-details {
-            font-size: 0.875rem; /* text-sm */
-            color: #4b5563; /* text-gray-600 */
-            margin-bottom: 0.5rem; /* mb-2 */
-        }
-        ul {
-            list-style-position: outside;
-            padding-left: 1.25rem; /* pl-5 */
-        }
-        li {
-            margin-bottom: 0.25rem; /* mb-1 */
-            color: #374151; /* text-gray-700 */
-        }
-        /* Stagger animations */
-        .delay-0 { animation-delay: 0s; opacity: 0; }
-        .delay-1 { animation-delay: 0.2s; opacity: 0; }
-        .delay-2 { animation-delay: 0.4s; opacity: 0; }
-        .delay-3 { animation-delay: 0.6s; opacity: 0; }
-        .delay-4 { animation-delay: 0.8s; opacity: 0; }
-        .delay-5 { animation-delay: 1s; opacity: 0; }
-
-        /* PDF Button Styling */
-        #downloadPdf {
-            background-color: #2563eb; /* bg-blue-600 */
-            color: white;
-            padding: 0.75rem 1.5rem; /* py-3 px-6 */
-            border-radius: 0.375rem; /* rounded-md */
-            font-weight: 500; /* font-medium */
-            transition: background-color 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        #downloadPdf:hover {
-            background-color: #1d4ed8; /* bg-blue-700 */
-        }
-        #downloadPdf:disabled {
-            background-color: #9ca3af; /* bg-gray-400 */
-            cursor: not-allowed;
-        }
-        #pdfMessage {
-            position: fixed;
-            bottom: 20px;
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #10b981; /* bg-green-500 */
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #002e19, #00ff88);
+            border-radius: 2px;
         }
-        #pdfMessage.show {
-            opacity: 1;
-        }
-        #pdfMessage.error {
-            background-color: #ef4444; /* bg-red-500 */
-        }
-
     </style>
 </head>
-<body class="bg-slate-100 text-gray-800">
+<body>
 
-
-    <div id="pdfMessage"></div>
-
-
-    <div id="cvContent" class="max-w-5xl mx-auto p-6 md:p-12 bg-white shadow-2xl my-8 print:shadow-none print:my-0">
-        <header class="text-center mb-10 animate-fadeInUp delay-0">
-            <h1 class="text-5xl font-bold text-blue-700">DANIEL ESTEBAN SUAREZ POVEDA</h1>
-            <p class="text-xl text-gray-600 mt-2">
-                Gerente de Desarrollo de Negocios | Ingeniero de Preventa | Consultor de Soluciones | Ingeniero de Software
-            </p>
-            <div class="mt-6 flex justify-center items-center space-x-6 text-gray-700">
-                <a href="tel:+573245947832" class="flex items-center hover:text-blue-600 transition-colors">
-                    <i data-lucide="phone" class="w-5 h-5 mr-2"></i> +57 324 594 7832
-                </a>
-                <a href="mailto:daniel.suarezpo@gmail.com" class="flex items-center hover:text-blue-600 transition-colors">
-                    <i data-lucide="mail" class="w-5 h-5 mr-2"></i> daniel.suarezpo@gmail.com
-                </a>
-                <a href="https://www.linkedin.com/in/daniel-esteban-suarez-b6aa94161" target="_blank" rel="noopener noreferrer" class="flex items-center hover:text-blue-600 transition-colors">
-                    <i data-lucide="linkedin" class="w-5 h-5 mr-2"></i> LinkedIn
-                </a>
-                <span class="flex items-center">
-                    <i data-lucide="map-pin" class="w-5 h-5 mr-2"></i> Bogotá, Colombia
-                </span>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <aside class="md:col-span-1 space-y-8">
-                <section class="animate-fadeInUp delay-1">
-                    <h2 class="section-title">RESUMEN PROFESIONAL</h2>
-                    <p class="text-gray-700 leading-relaxed">
-                        Gerente de Desarrollo de Negocios con amplia experiencia en consultoría de soluciones para la transformación digital, especializado en la identificación y desarrollo de oportunidades de negocio B2B. Cuento con una sólida trayectoria en soluciones de Software como Servicio (SaaS) para contact centers, incluyendo plataformas de automatización, omnicanalidad e inteligencia artificial.
-                    </p>
-                    <p class="text-gray-700 leading-relaxed mt-3">
-                        Experto en la generación de estrategias comerciales, identificación de necesidades del cliente y desarrollo de propuestas de valor alineadas con los objetivos empresariales. Habilidoso en la gestión de relaciones con clientes, negociación y cierre de acuerdos, asegurando implementaciones exitosas y un alto impacto en la rentabilidad de las empresas.
-                    </p>
-                </section>
-
-                <section class="animate-fadeInUp delay-2">
-                    <h2 class="section-title">EDUCACIÓN</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <h3 class="job-title">Inteligencia Artificial Aplicada a los Negocios</h3>
-                            <p class="company-details">BootCamp Institute (2025 - Actualidad)</p>
-                        </div>
-                        <div>
-                            <h3 class="job-title">Certificación AWS en Computación en la Nube (CC101)</h3>
-                            <p class="company-details">Amazon Web Services Training and Certification</p>
-                        </div>
-                        <div>
-                            <h3 class="job-title">Ingeniero de Software</h3>
-                            <p class="company-details">Fundación de Educación Superior San José</p>
-                        </div>
-                        <div>
-                            <h3 class="job-title">Certificación Five9 Sales Triple Crown</h3>
-                            <p class="company-details">Five9 University</p>
-                        </div>
-                        <div>
-                            <h3 class="job-title">Profesional Certificado Genesys (GCP-GC)</h3>
-                            <p class="company-details">Genesys University</p>
-                        </div>
-                        <div>
-                            <h3 class="job-title">Nivel de Inglés B1 Certificado</h3>
-                            <p class="company-details">Soluciones internacionales en estrategias y tecnologías de educación empresarial SAS</p>
-                        </div>
-                        <div>
-                            <h3 class="job-title">Tecnología en Gestión de Sistemas de Información</h3>
-                            <p class="company-details">Fundación de Educación Superior San José</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="animate-fadeInUp delay-3">
-                    <h2 class="section-title">IDIOMAS</h2>
-                    <div class="space-y-1">
-                        <p><strong class="font-medium text-gray-800">Español:</strong> Nativo</p>
-                        <p><strong class="font-medium text-gray-800">Inglés:</strong> Avanzado (Certificado B1)</p>
-                    </div>
-                </section>
-            </aside>
-
-            <main class="md:col-span-2 space-y-8">
-                <section class="animate-fadeInUp delay-4">
-                    <h2 class="section-title">EXPERIENCIA LABORAL</h2>
-                    <div class="space-y-6">
-                        <div>
-                            <h3 class="job-title">Gerente de Desarrollo de Negocios</h3>
-                            <p class="company-details">AXEDE SAS | Bogotá, Colombia (2024 - Actualidad)</p>
-                            <p class="company-details italic">Equipo de Preventa</p>
-                            <ul class="list-disc">
-                                <li>Analizar las necesidades del cliente y del mercado para desarrollar propuestas diferenciadas de Experiencia de Cliente.</li>
-                                <li>Diseñar soluciones innovadoras que integren tecnologías SaaS como Five9, Genesys Pure Cloud, AWS Connect, Zendesk, Salesforce y otras.</li>
-                                <li>Desarrollar modelos de eficiencia operativa y retorno de la inversión (ROI) para sustentar la viabilidad de las soluciones.</li>
-                                <li>Presentar sustento técnico basado en benchmarks, KPIs de rendimiento y métricas de eficiencia.</li>
-                                <li>Desarrollar casos de uso y pruebas de concepto (PoC) para demostrar el impacto de las soluciones en la optimización de la CX.</li>
-                                <li>Coordinar con las áreas de desarrollo e implementación para asegurar la viabilidad de las soluciones propuestas.</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h3 class="job-title">Consultor de Soluciones e Ingeniero de Preventa</h3>
-                            <p class="company-details">Atento LATAM | Colombia, Perú, Chile, Argentina, Ecuador y México (2022 - 2024)</p>
-                            <p class="company-details italic">Equipo Comercial de Ventas</p>
-                            <ul class="list-disc">
-                                <li>Incrementé las ventas en $100.000 USD proporcionando experiencia técnica en soluciones de plataformas omnicanal.</li>
-                                <li>Diseñar flujos de automatización de procesos mediante Tecnologías RPA liderando equipos de desarrollo.</li>
-                                <li>Consultoría en experiencia de cliente basada en plataformas omnicanal asesorando al cliente y a los stakeholders en su búsqueda de mejora de procesos y eficiencias operativas utilizando metodologías ágiles.</li>
-                                <li>Elaboración de presentaciones de alto valor y preparación de ofertas económicas.</li>
-                                <li>Demostraciones en vivo en plataformas de Contact Center como Genesys Pure Cloud, Five9, Avaya, Go Contact, Infobip y otras plataformas (especialmente Soluciones Cloud o SaaS).</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h3 class="job-title">Analista de Negocios de Infraestructura</h3>
-                            <p class="company-details">Grupo BBVA: Comercializadora de Servicios Financieros | España - Colombia (2019 - 2022)</p>
-                            <p class="company-details italic">Equipo de Soporte de Infraestructura y Negocio</p>
-                            <ul class="list-disc">
-                                <li>Migración, Implementación y administración de plataformas de gestión de Infraestructura y Contact Center (Telefonía y CRM para Cobranzas y Ventas de productos intangibles) basadas en tecnologías Genesys Pure Cloud y Google Cloud, Google App Script y Google Looker Studio.</li>
-                                <li>Optimicé los canales de comunicación entre los stakeholders técnicos y no técnicos, mejorando la claridad del proyecto y la visibilidad del progreso.</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h3 class="job-title">Analista TI</h3>
-                            <p class="company-details">AlphaCredit Colombia | México - Colombia (2018 - 2019)</p>
-                            <p class="company-details italic">Equipo de Soporte de Infraestructura y Negocio</p>
-                            <ul class="list-disc">
-                                <li>Instalar y configurar hardware, software, redes y sistemas.</li>
-                                <li>Desplegar y administrar servidores, redes y dispositivos de almacenamiento.</li>
-                                <li>Implementación y administración de Software Aranda Help Desk.</li>
-                                <li>Administración de equipos Cisco, Fortinet, Meraki y administrador de usuarios de active directory.</li>
-                                <li>Implementar y mantener políticas de seguridad y prácticas de protección de datos.</li>
-                                <li>Monitorear sistemas y redes para detectar y responder a amenazas de seguridad.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-            </main>
-        </div>
-
-        <footer class="text-center mt-12 pt-8 border-t border-gray-300 animate-fadeInUp delay-5 print:hidden">
-            <p class="text-sm text-gray-500">&copy; <span id="currentYear"></span> Daniel Esteban Suarez Poveda. Todos los derechos reservados.</p>
-        </footer>
+    <div class="header">
+        <h1><i class="fas fa-chart-line"></i> Dashboard Contact Center - Universidad Externado de Colombia</h1>
     </div>
 
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab(event, 'realTime')"><i class="fas fa-eye"></i> KPIs en Tiempo Real</button>
+        <button class="tab-button" onclick="openTab(event, 'historicalData')"><i class="fas fa-chart-bar"></i> Datos Históricos</button>
+        <button class="tab-button" onclick="openTab(event, 'crmLeads')"><i class="fas fa-user-plus"></i> CRM y Leads</button>
+    </div>
+
+    <div id="realTime" class="tab-content active">
+        <h2 class="section-title">Estado Actual de la Campaña de WhatsApp y Bot</h2>
+        <div class="grid-container">
+            <div class="card">
+                <h2><i class="fas fa-comments"></i> Chats Activos</h2>
+                <div class="kpi" id="activeChats">--</div>
+                <p class="kpi-label">Total (Bot + Agentes)</p>
+                <div class="chart-container-small">
+                    <canvas id="activeChatsPieChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-users"></i> Chats en Cola</h2>
+                <div class="kpi" id="chatsInQueue">--</div>
+                <p class="kpi-label">Esperando Agente</p>
+                <div class="chart-container-small">
+                    <canvas id="queueTrendChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-clock"></i> Espera Máxima</h2>
+                <div class="kpi" id="maxWaitTime">--:--</div>
+                <p class="kpi-label">En Cola (min:seg)</p>
+                <div class="metric-card"><strong>Promedio Hoy:</strong> <span id="avgWaitDisplay">--:--</span></div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-headset"></i> Agentes</h2>
+                <div class="kpi" id="agentsAvailable">-- / --</div>
+                <p class="kpi-label">Disponibles / Totales</p>
+                <div id="agentStatus">
+                    <div class="metric-card">Disponibles: <span id="agentsOnline">0</span></div>
+                    <div class="metric-card">Ocupados: <span id="agentsBusy">0</span></div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <h3 class="section-title"><i class="fas fa-robot"></i> Interacción con el Bot (Tiempo Real)</h3>
+        <div class="grid-container">
+            <div class="card">
+                <h2>Consultas Frecuentes al Bot</h2>
+                <div class="chart-container">
+                    <canvas id="botIntentsChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-chart-pie"></i> Resolución vs. Derivación</h2>
+                <div class="kpi" id="botResolutionRateRealTime">--%</div>
+                <p class="kpi-label">Chats resueltos por el Bot</p>
+                <div class="chart-container-small">
+                    <canvas id="escalationChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-smile"></i> Nivel de Satisfacción (CSAT)</h2>
+                <div class="kpi" id="liveCSAT">--/5</div>
+                <p class="kpi-label">Promedio de las últimas 10 encuestas</p>
+                <div class="chart-container-small">
+                    <canvas id="csatTrendChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-stopwatch"></i> Métricas Clave de Tiempos</h2>
+                <div class="metric-card"><strong>AHT (Promedio):</strong> <span id="avgHandleTimeRealTime">--:--</span></div>
+                <div class="metric-card"><strong>AWT (Promedio):</strong> <span id="avgWaitTimeQueueRealTime">--:--</span></div>
+                <div class="metric-card"><strong>Abandono (%):</strong> <span id="abandonmentRateRealTime">--%</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="historicalData" class="tab-content">
+        <h2 class="section-title">Análisis de Tendencias y Patrones</h2>
+        <div class="filter-controls">
+            <label for="dateRange"><i class="fas fa-calendar-alt"></i> Rango:</label>
+            <select id="dateRange">
+                <option value="last7days">Últimos 7 Días</option>
+                <option value="last30days" selected>Últimos 30 Días</option>
+                <option value="currentMonth">Este Mes</option>
+                <option value="lastMonth">Mes Pasado</option>
+            </select>
+            <button onclick="applyFilters()"><i class="fas fa-sync-alt"></i> Aplicar Filtros</button>
+        </div>
+        <hr/>
+        <div class="grid-container">
+            <div class="card">
+                <h2>Volumen Total de Chats</h2>
+                <div class="chart-container"><canvas id="totalChatsTrendChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Distribución Bot vs. Agente</h2>
+                <div class="chart-container"><canvas id="botVsAgentChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Tendencia del CSAT General</h2>
+                <div class="chart-container"><canvas id="csatHistoricalChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Evolución Tasa de Resolución Bot</h2>
+                <div class="chart-container"><canvas id="botResolutionHistoricalChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Opciones Más Consultadas (Histórico)</h2>
+                <div class="chart-container"><canvas id="topBotIntentsHistChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>CSAT por Opción del Bot</h2>
+                <div class="chart-container"><canvas id="csatPerBotIntentChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Tiempo Promedio de Conversación (AHT)</h2>
+                <div class="chart-container"><canvas id="ahtHistoricalChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Tiempo Promedio de Espera (AWT)</h2>
+                <div class="chart-container"><canvas id="awtHistoricalChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Tasa de Abandono en Cola</h2>
+                <div class="chart-container"><canvas id="abandonmentHistoricalChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Horas Pico de Demanda</h2>
+                <div class="chart-container"><canvas id="peakHoursChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="crmLeads" class="tab-content">
+        <h2 class="section-title">Gestión de Leads y CRM</h2>
+        <div class="grid-container">
+             <div class="card">
+                <h2><i class="fas fa-user-check"></i> Leads Registrados</h2>
+                <div class="kpi" id="totalLeads">--</div>
+                <div class="metric-card"><strong>Hoy:</strong> <span id="todayLeads">--</span></div>
+                <div class="metric-card"><strong>Esta semana:</strong> <span id="weekLeads">--</span></div>
+                <div class="metric-card"><strong>Este mes:</strong> <span id="monthLeads">--</span></div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-phone-alt"></i> Gestión de Llamadas</h2>
+                <div class="kpi" id="callsAnsweredRate">--%</div>
+                <p class="kpi-label">Tasa de Contestación</p>
+                <div class="metric-card"><strong>Realizadas:</strong> <span id="totalCallsMade">--</span></div>
+                <div class="metric-card"><strong>Contestadas:</strong> <span id="totalCallsAnswered">--</span></div>
+            </div>
+            <div class="card">
+                <h2><i class="fab fa-whatsapp"></i> WhatsApp Outbound</h2>
+                <div class="kpi" id="whatsappConversionRate">--%</div>
+                <p class="kpi-label">Conversión a Asesor</p>
+                <div class="metric-card"><strong>Enviados:</strong> <span id="whatsappSent">--</span></div>
+                <div class="metric-card"><strong>Respuestas:</strong> <span id="whatsappReplies">--</span></div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-chart-pie"></i> Participación por Canal</h2>
+                <div class="chart-container"><canvas id="channelParticipationChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-chart-line"></i> Tendencia de Leads Semanal</h2>
+                <div class="chart-container"><canvas id="leadsTrendChart"></canvas></div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-phone-volume"></i> Efectividad de Llamadas por Hora</h2>
+                <div class="chart-container"><canvas id="callEffectivenessChart"></canvas></div>
+            </div>
+             <div class="card">
+                <h2><i class="fas fa-bullseye"></i> Tasa de Conversión por Canal</h2>
+                <div class="chart-container"><canvas id="conversionByChannelChart"></canvas></div>
+            </div>
+             <div class="card">
+                <h2><i class="fas fa-star"></i> Top 5 Programas Demandados</h2>
+                <div class="chart-container"><canvas id="topProgramsChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chartModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <canvas id="modalChartCanvas"></canvas>
+        </div>
+    </div>
+
+
     <script>
-        // Render Lucide Icons
-        lucide.createIcons();
+    // =================================================================================
+    // 1. CONFIGURACIÓN GLOBAL Y VARIABLES
+    // =================================================================================
+    let charts = {}; // Objeto para almacenar todas las instancias de los gráficos
+    let modalChart = null; // Variable para el gráfico en la ventana modal
 
-        // Set current year in footer
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    const colors = {
+        primary: '#002e19',
+        secondary: '#00c677',
+        accent: '#004d2b',
+        success: '#28a745',
+        warning: '#ffc107',
+        danger: '#dc3545',
+        info: '#17a2b8',
+        lightGray: 'rgba(0,0,0,0.1)'
+    };
 
-        // PDF Generation
-        const downloadButton = document.getElementById('downloadPdf');
-        const cvContent = document.getElementById('cvContent');
-        const pdfMessage = document.getElementById('pdfMessage');
-
-        function showPdfMessage(message, isError = false) {
-            pdfMessage.textContent = message;
-            pdfMessage.className = 'show ' + (isError ? 'error' : '');
-            setTimeout(() => {
-                pdfMessage.className = pdfMessage.className.replace('show', '').trim();
-            }, 3000);
+    // =================================================================================
+    // 2. LÓGICA DE NAVEGACIÓN Y MODAL
+    // =================================================================================
+    function openTab(evt, tabName) {
+        const tabcontent = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        const tabbuttons = document.getElementsByClassName("tab-button");
+        for (let i = 0; i < tabbuttons.length; i++) {
+            tabbuttons[i].classList.remove("active");
         }
 
-        downloadButton.addEventListener('click', function () {
-            const { jsPDF } = window.jspdf;
-            
-            downloadButton.disabled = true;
-            const originalButtonText = downloadButton.querySelector('span').textContent;
-            downloadButton.querySelector('span').textContent = 'Generando PDF...';
-            downloadButton.querySelector('i').style.display = 'none'; // Hide icon during loading
+        document.getElementById(tabName).style.display = "block";
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
 
-            // Temporarily remove animations for PDF generation to ensure proper capture
-            const animatedElements = cvContent.querySelectorAll('[class*="animate-fadeInUp"]');
-            animatedElements.forEach(el => el.style.animation = 'none');
-            
-            // Ensure all content is visible (e.g. if there were accordions or tabs)
-            // For this layout, it's mostly straightforward.
-
-            html2canvas(cvContent, {
-                scale: 2, // Improves quality
-                useCORS: true,
-                logging: false, // Set to true for debugging html2canvas issues
-                windowWidth: cvContent.scrollWidth,
-                windowHeight: cvContent.scrollHeight,
-                onclone: (document) => {
-                    // You could make adjustments to the cloned document here if needed
-                    // e.g., ensure all styles are applied, remove unwanted elements for print
-                }
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png', 1.0); // Use highest quality PNG
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'pt',
-                    format: 'a4'
-                });
-
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                
-                const canvasWidth = canvas.width;
-                const canvasHeight = canvas.height;
-
-                // Calculate the aspect ratio to fit the image onto the PDF page
-                const ratio = Math.min(pdfWidth / canvasWidth, pdfHeight / canvasHeight);
-                
-                const imgActualWidth = canvasWidth * ratio;
-                const imgActualHeight = canvasHeight * ratio;
-
-                // Center the image on the PDF page (optional)
-                const xOffset = (pdfWidth - imgActualWidth) / 2;
-                const yOffset = (pdfHeight - imgActualHeight) / 2;
-
-                // Add image to PDF
-                // If content is very long, it might exceed one page. This basic implementation adds it as a single image.
-                // For multi-page, one would need to split the canvas or generate content page by page.
-                if (imgActualHeight > pdfHeight) {
-                     console.warn("El contenido es más alto que una página A4, se escalará para ajustarse. Para CVs largos, considera un PDF de varias páginas.");
-                }
-                pdf.addImage(imgData, 'PNG', xOffset, yOffset > 0 ? yOffset : 0, imgActualWidth, imgActualHeight);
-                
-                pdf.save('CV_Daniel_Suarez.pdf');
-                showPdfMessage('PDF generado y descargado exitosamente!');
-
-            }).catch(error => {
-                console.error("Error generando el PDF:", error);
-                showPdfMessage('Error al generar el PDF. Intente de nuevo.', true);
-            }).finally(() => {
-                downloadButton.disabled = false;
-                downloadButton.querySelector('span').textContent = originalButtonText;
-                downloadButton.querySelector('i').style.display = 'inline-block'; // Show icon again
-                // Restore animations if they were removed
-                animatedElements.forEach(el => el.style.animation = '');
-            });
+        Object.keys(charts).forEach(key => {
+            if (charts[key] instanceof Chart) charts[key].destroy();
         });
+        charts = {}; 
+
+        setTimeout(() => {
+            if (tabName === 'realTime') {
+                updateRealTimeKPIs();
+                initializeRealTimeCharts();
+            } else if (tabName === 'historicalData') {
+                initializeHistoricalCharts();
+            } else if (tabName === 'crmLeads') {
+                updateCRMKPIs();
+                initializeCRMCharts();
+            }
+        }, 100);
+    }
+
+    // --- Lógica de la Ventana Modal ---
+    function enlargeChart(chartInstance) {
+        const modal = document.getElementById('chartModal');
+        const modalCanvas = document.getElementById('modalChartCanvas');
+        const modalCtx = modalCanvas.getContext('2d');
+
+        if (modalChart) {
+            modalChart.destroy();
+        }
+
+        const modalOptions = {
+            ...chartInstance.config.options, // Copia las opciones originales
+            responsive: true,
+            maintainAspectRatio: false, // Permite que el gráfico llene el contenedor modal
+            plugins: {
+                ...chartInstance.config.options.plugins,
+                legend: { // Mejora la leyenda para la vista grande
+                    ...chartInstance.config.options.plugins?.legend,
+                    position: 'top', 
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            }
+        };
+        
+        modalChart = new Chart(modalCtx, {
+            type: chartInstance.config.type,
+            data: chartInstance.config.data,
+            options: modalOptions
+        });
+
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('chartModal');
+        if (modalChart) {
+            modalChart.destroy();
+            modalChart = null;
+        }
+        modal.style.display = 'none';
+    }
+
+    // =================================================================================
+    // 3. FUNCIONES PARA ACTUALIZAR KPIs
+    // =================================================================================
+    function formatTime(minutes, seconds) { return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; }
+    function updateRealTimeKPIs() {
+        if (!document.getElementById('realTime').classList.contains('active')) return;
+        document.getElementById('activeChats').textContent = Math.floor(Math.random() * 15) + 8;
+        document.getElementById('chatsInQueue').textContent = Math.floor(Math.random() * 7);
+        document.getElementById('maxWaitTime').textContent = formatTime(Math.floor(Math.random() * 4), Math.floor(Math.random() * 60));
+        document.getElementById('avgWaitDisplay').textContent = formatTime(Math.floor(Math.random() * 2), Math.floor(Math.random() * 60));
+        const totalAgents = 8;
+        const availableAgents = Math.floor(Math.random() * 4) + 2;
+        const busyAgents = Math.min(Math.floor(Math.random()*4), totalAgents - availableAgents);
+        document.getElementById('agentsAvailable').textContent = `${availableAgents} / ${totalAgents}`;
+        document.getElementById('agentsOnline').textContent = availableAgents;
+        document.getElementById('agentsBusy').textContent = busyAgents;
+        document.getElementById('botResolutionRateRealTime').textContent = `${Math.floor(Math.random() * 25) + 65}%`;
+        document.getElementById('liveCSAT').textContent = `${(Math.random() * 1.2 + 3.7).toFixed(1)}/5`;
+        document.getElementById('avgHandleTimeRealTime').textContent = formatTime(Math.floor(Math.random() * 3) + 3, Math.floor(Math.random() * 60));
+        document.getElementById('avgWaitTimeQueueRealTime').textContent = formatTime(Math.floor(Math.random() * 2), Math.floor(Math.random() * 60));
+        document.getElementById('abandonmentRateRealTime').textContent = `${Math.floor(Math.random() * 10) + 2}%`;
+    }
+    function updateCRMKPIs() {
+        if (!document.getElementById('crmLeads').classList.contains('active')) return;
+        document.getElementById('totalLeads').textContent = (Math.floor(Math.random() * 500) + 2500).toLocaleString();
+        document.getElementById('todayLeads').textContent = Math.floor(Math.random() * 30) + 45;
+        document.getElementById('weekLeads').textContent = Math.floor(Math.random() * 150) + 250;
+        document.getElementById('monthLeads').textContent = Math.floor(Math.random() * 600) + 1000;
+        const totalCallsMade = Math.floor(Math.random() * 200) + 850;
+        const totalCallsAnswered = Math.floor(totalCallsMade * (0.65 + Math.random() * 0.15));
+        document.getElementById('callsAnsweredRate').textContent = `${Math.floor((totalCallsAnswered / totalCallsMade) * 100)}%`;
+        document.getElementById('totalCallsMade').textContent = totalCallsMade;
+        document.getElementById('totalCallsAnswered').textContent = totalCallsAnswered;
+        const whatsappSent = Math.floor(Math.random() * 300) + 1200;
+        const whatsappReplies = Math.floor(whatsappSent * (0.45 + Math.random() * 0.15));
+        document.getElementById('whatsappConversionRate').textContent = `${Math.floor((whatsappReplies / whatsappSent) * 100)}%`;
+        document.getElementById('whatsappSent').textContent = whatsappSent;
+        document.getElementById('whatsappReplies').textContent = whatsappReplies;
+    }
+
+    // =================================================================================
+    // 4. FUNCIONES PARA CREAR GRÁFICOS (con event listeners para ampliar)
+    // =================================================================================
+    function createChart(ctx, config) {
+        if (!ctx) return null;
+        const chart = new Chart(ctx, config);
+        // Agregar evento de clic al contenedor del canvas para ampliar
+        ctx.canvas.parentElement.onclick = () => enlargeChart(chart);
+        return chart;
+    }
+    
+    function initializeRealTimeCharts() {
+        const activeChats = parseInt(document.getElementById('activeChats').textContent) || 10;
+        const botChats = Math.floor(activeChats * 0.7);
+        const agentChats = activeChats - botChats;
+        const botResolution = parseInt(document.getElementById('botResolutionRateRealTime').textContent) || 75;
+
+        charts.activeChatsPie = createChart(document.getElementById('activeChatsPieChart')?.getContext('2d'), { type: 'doughnut', data: { labels: ['Bot', 'Agentes'], datasets: [{ data: [botChats, agentChats], backgroundColor: [colors.primary, colors.secondary], borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
+        charts.queueTrend = createChart(document.getElementById('queueTrendChart')?.getContext('2d'), { type: 'line', data: { labels: ['-50s', '-40s', '-30s', '-20s', '-10s', 'Ahora'], datasets: [{ label: 'Chats en Cola', data: [3, 4, 2, 5, 3, parseInt(document.getElementById('chatsInQueue').textContent)], borderColor: colors.warning, backgroundColor: colors.warning + '30', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 10 } }, plugins: { legend: { display: false } } } });
+        charts.botIntents = createChart(document.getElementById('botIntentsChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Admisiones', 'Posgrados', 'Pagos', 'Soporte AV', 'Horarios'], datasets: [{ label: 'Consultas (ahora)', data: [8, 6, 5, 3, 2], backgroundColor: [colors.primary, colors.secondary, colors.accent, colors.info, colors.warning], borderRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } } });
+        charts.escalation = createChart(document.getElementById('escalationChart')?.getContext('2d'), { type: 'doughnut', data: { labels: ['Resuelto por Bot', 'Derivado'], datasets: [{ data: [botResolution, 100 - botResolution], backgroundColor: [colors.success, colors.warning], borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
+        charts.csatTrend = createChart(document.getElementById('csatTrendChart')?.getContext('2d'), { type: 'line', data: { labels: ['-4', '-3', '-2', '-1', 'Último'], datasets: [{ label: 'CSAT', data: [4.1, 4.3, 4.0, 4.5, parseFloat(document.getElementById('liveCSAT').textContent)], borderColor: colors.primary, backgroundColor: colors.primary + '30', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false, min: 3, max: 5 } }, plugins: { legend: { display: false } } } });
+    }
+
+    function initializeHistoricalCharts() {
+        charts.totalChatsTrend = createChart(document.getElementById('totalChatsTrendChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'Chats Totales', data: [800, 870, 950, 980], borderColor: colors.primary, backgroundColor: colors.primary + '20', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false } });
+        charts.botVsAgent = createChart(document.getElementById('botVsAgentChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'Bot', data: [600, 650, 700, 750], backgroundColor: colors.primary, borderRadius: 5 }, { label: 'Agente', data: [200, 220, 250, 230], backgroundColor: colors.secondary, borderRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } } });
+        charts.csatHistorical = createChart(document.getElementById('csatHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'CSAT Promedio', data: [4.1, 4.3, 4.2, 4.4], borderColor: colors.success, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 3.5, max: 5 } } } });
+        charts.botResolutionHistorical = createChart(document.getElementById('botResolutionHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'Tasa de Resolución (%)', data: [70, 72, 68, 75], borderColor: colors.info, tension: 0.4, fill: true, backgroundColor: colors.info + '20' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 60, max: 80 } } } });
+        charts.topBotIntentsHist = createChart(document.getElementById('topBotIntentsHistChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Admisiones', 'Info Posgrados', 'Pagos', 'Bienestar', 'Biblioteca'], datasets: [{ label: 'Consultas', data: [2500, 1800, 1500, 900, 700], backgroundColor: [colors.primary, colors.secondary, colors.accent, colors.info, colors.warning], borderRadius: 8 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+        charts.csatPerBotIntent = createChart(document.getElementById('csatPerBotIntentChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Admisiones', 'Posgrados', 'Pagos', 'Soporte AV', 'Bienestar'], datasets: [{ label: 'CSAT Promedio', data: [4.5, 4.2, 3.9, 4.0, 4.3], backgroundColor: [colors.success, colors.info, colors.warning, colors.info, colors.success], borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 3.5, max: 5 } } } });
+        charts.ahtHistorical = createChart(document.getElementById('ahtHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'AHT (min)', data: [5.5, 5.0, 4.75, 4.6], borderColor: colors.primary, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Minutos' } } } } });
+        charts.awtHistorical = createChart(document.getElementById('awtHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'AWT (min)', data: [2.1, 1.8, 2.0, 1.5], borderColor: colors.warning, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Minutos' } } } } });
+        charts.abandonmentHistorical = createChart(document.getElementById('abandonmentHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'Abandono (%)', data: [10, 8, 9, 6], borderColor: colors.danger, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: '%' } } } } });
+        charts.peakHours = createChart(document.getElementById('peakHoursChart')?.getContext('2d'), { type: 'bar', data: { labels: ['8-10h', '10-12h', '14-16h', '16-18h'], datasets: [ { label: 'Lunes-Viernes', data: [120, 180, 160, 100], backgroundColor: colors.primary }] }, options: { responsive: true, maintainAspectRatio: false } });
+    }
+    
+    function initializeCRMCharts() {
+        // --- GRÁFICOS MODIFICADOS ---
+        charts.channelParticipation = createChart(document.getElementById('channelParticipationChart')?.getContext('2d'), { type: 'doughnut', data: { labels: ['Voz', 'WhatsApp'], datasets: [{ data: [60, 40], backgroundColor: [colors.primary, colors.success], borderWidth: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
+        charts.conversionByChannel = createChart(document.getElementById('conversionByChannelChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Voz', 'WhatsApp'], datasets: [{ label: 'Tasa Conversión (%)', data: [18, 15], backgroundColor: [colors.success, colors.info], borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { max: 25 } } } });
+        
+        // --- OTROS GRÁFICOS DE CRM ---
+        charts.leadsTrend = createChart(document.getElementById('leadsTrendChart')?.getContext('2d'), { type: 'line', data: { labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'], datasets: [{ label: 'Leads Registrados', data: [45, 52, 48, 65, 58, 32], borderColor: colors.primary, tension: 0.4, fill: true, backgroundColor: colors.primary+'20' }] }, options: { responsive: true, maintainAspectRatio: false } });
+        charts.callEffectiveness = createChart(document.getElementById('callEffectivenessChart')?.getContext('2d'), { type: 'bar', data: { labels: ['8-10', '10-12', '14-16', '16-18'], datasets: [{ label: 'Realizadas', data: [80, 120, 150, 140], backgroundColor: colors.primary+'90' }, { label: 'Contestadas', data: [60, 96, 120, 105], backgroundColor: colors.success+'90' }] }, options: { responsive: true, maintainAspectRatio: false } });
+        charts.topPrograms = createChart(document.getElementById('topProgramsChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Derecho', 'Admin.', 'Economía', 'Psicología', 'Com.'], datasets: [{ label: 'Leads', data: [250, 200, 180, 150, 120], backgroundColor: [colors.primary, colors.secondary, colors.accent, colors.info, colors.warning], borderRadius: 8 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+    }
+    
+    // =================================================================================
+    // 5. INICIALIZACIÓN Y EVENTOS
+    // =================================================================================
+    function applyFilters() {
+        console.log("Filtros aplicados.");
+        openTab({ currentTarget: document.querySelector('.tab-button.active') }, 'historicalData');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Cargar la primera pestaña por defecto
+        updateRealTimeKPIs();
+        initializeRealTimeCharts();
+        
+        // Configurar eventos para cerrar el modal
+        const modal = document.getElementById('chartModal');
+        const closeBtn = document.querySelector('.close-modal');
+        closeBtn.onclick = closeModal;
+        modal.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        // Simular actualización de KPIs en tiempo real
+        setInterval(() => {
+            if (document.getElementById('realTime').classList.contains('active')) {
+                updateRealTimeKPIs();
+            } else if (document.getElementById('crmLeads').classList.contains('active')) {
+                updateCRMKPIs();
+            }
+        }, 7000);
+    });
+
     </script>
 </body>
 </html>
