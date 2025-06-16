@@ -3,666 +3,688 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Contact Center - Universidad Externado de Colombia</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>EstoicBot - Tu Mentor Filosófico Digital</title>
     <style>
-        /* --- ESTILOS GENERALES Y FUENTES --- */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #333;
-            min-height: 100vh;
+            box-sizing: border-box;
         }
 
-        /* --- HEADER Y TABS --- */
-        .header {
-            background: linear-gradient(135deg, #002e19 0%, #004d2b 100%);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
             color: white;
             padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 46, 25, 0.3);
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 2.2em;
-            font-weight: 600;
-        }
-        .tabs {
             display: flex;
-            justify-content: center;
-            background: linear-gradient(135deg, #002e19 0%, #004d2b 100%);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+            border-radius: 0;
         }
-        .tab-button {
-            padding: 18px 30px;
-            cursor: pointer;
-            border: none;
-            background: transparent;
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .philosophy-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .quick-topics {
+            margin-top: 20px;
+        }
+
+        .quick-topics h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .topic-btn {
+            display: block;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            font-size: 1.1em;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
             transition: all 0.3s ease;
-            border-bottom: 4px solid transparent;
+            font-size: 14px;
+        }
+
+        .topic-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        /* Chat Area */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .chat-header {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
             position: relative;
         }
-        .tab-button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+
+        .chat-header h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
         }
-        .tab-button.active {
-            border-bottom: 4px solid #00ff88;
-            background-color: rgba(255, 255, 255, 0.1);
-            font-weight: bold;
+
+        .chat-header .status {
+            font-size: 12px;
+            opacity: 0.9;
         }
-        .tab-content {
-            display: none;
-            padding: 30px;
-            animation: fadeIn 0.5s ease-in-out;
+
+        .online-indicator {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: #4ade80;
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: pulse 2s infinite;
         }
-        .tab-content.active {
-            display: block;
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- CONTENEDORES Y TARJETAS --- */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            border-top: 4px solid #002e19;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        }
-        .card h2 {
-            color: #002e19;
-            font-size: 1.3em;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        .card .chart-container, .card .chart-container-small {
-            cursor: pointer; /* Indica que los gráficos son clickables */
+        .message.bot {
+            display: flex;
+            align-items: flex-start;
         }
 
-        /* --- KPIs Y MÉTRICAS --- */
-        .kpi {
-            font-size: 3em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #002e19, #007a4a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .kpi-label {
-            font-size: 1em;
-            color: #666;
-            text-align: center;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-        .metric-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 12px 15px;
-            margin: 8px 0;
-            border-left: 4px solid #004d2b;
-            font-size: 0.95em;
+        .message.user {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
         }
 
-        /* --- GRÁFICOS Y CONTENEDORES --- */
-        .chart-container {
-            position: relative;
-            height: 320px;
-            margin-top: 15px;
-        }
-        .chart-container-small {
-            position: relative;
-            height: 180px;
-            margin-top: 15px;
-        }
-        
-        /* --- ESTILOS PARA LA VENTANA MODAL --- */
-        .modal {
-            display: none; /* Oculto por defecto */
-            position: fixed;
-            z-index: 1001; /* Encima de todo */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.7);
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s;
-        }
-        .modal-content {
-            position: relative;
-            background-color: #fefefe;
-            margin: auto;
-            padding: 30px;
-            border-radius: 10px;
-            width: 85%;
-            height: 85%;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-        }
-        .close-modal {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 25px;
-            font-size: 35px;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-        .close-modal:hover,
-        .close-modal:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* --- FILTROS Y OTROS ELEMENTOS --- */
-        .filter-controls {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 10px;
             display: flex;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
         }
-        .filter-controls label {
-            color: #002e19;
-            font-weight: 600;
-        }
-        .filter-controls select, .filter-controls input[type="date"] {
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s ease;
-        }
-        .filter-controls select:focus, .filter-controls input[type="date"]:focus {
-            outline: none;
-            border-color: #002e19;
-        }
-        .filter-controls button {
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #002e19, #004d2b);
+
+        .bot .avatar {
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
         }
-        .filter-controls button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 46, 25, 0.3);
+
+        .user .avatar {
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            color: white;
         }
-        hr {
-            border: none;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #c3cfe2, transparent);
-            margin: 40px 0;
-        }
-        .section-title {
-            font-size: 1.8em;
-            color: #002e19;
-            margin-bottom: 30px;
-            font-weight: 600;
-            text-align: center;
+
+        .message-content {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 20px;
             position: relative;
         }
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #002e19, #00ff88);
-            border-radius: 2px;
+
+        .bot .message-content {
+            background: white;
+            color: #2d3748;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .user .message-content {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 5px;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .typing-dots {
+            display: flex;
+            margin-left: 60px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #cbd5e0;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1.5s infinite;
+        }
+
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .chat-input {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            background: #f7fafc;
+            border-radius: 25px;
+            padding: 5px;
+            border: 2px solid #e2e8f0;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-container:focus-within {
+            border-color: #667eea;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 15px 20px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .send-btn {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .suggestions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .suggestion-chip {
+            background: linear-gradient(45deg, #e2e8f0, #cbd5e0);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-chip:hover {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .chat-header {
+                padding: 15px;
+            }
+            
+            .chat-messages {
+                padding: 15px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+            
+            .chat-input {
+                padding: 15px;
+            }
+            
+            .suggestions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .suggestion-chip {
+                text-align: center;
+            }
+        }
+
+        /* Welcome message special styling */
+        .welcome-message {
+            text-align: center;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1><i class="fas fa-chart-line"></i> Dashboard Contact Center - Universidad Externado de Colombia</h1>
-    </div>
-
-    <div class="tabs">
-        <button class="tab-button active" onclick="openTab(event, 'realTime')"><i class="fas fa-eye"></i> KPIs en Tiempo Real</button>
-        <button class="tab-button" onclick="openTab(event, 'historicalData')"><i class="fas fa-chart-bar"></i> Datos Históricos</button>
-        <button class="tab-button" onclick="openTab(event, 'crmLeads')"><i class="fas fa-user-plus"></i> CRM y Leads</button>
-    </div>
-
-    <div id="realTime" class="tab-content active">
-        <h2 class="section-title">Estado Actual de la Campaña de WhatsApp y Bot</h2>
-        <div class="grid-container">
-            <div class="card">
-                <h2><i class="fas fa-comments"></i> Chats Activos</h2>
-                <div class="kpi" id="activeChats">--</div>
-                <p class="kpi-label">Total (Bot + Agentes)</p>
-                <div class="chart-container-small">
-                    <canvas id="activeChatsPieChart"></canvas>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="philosophy-icon">🏛️</div>
+                <h1>EstoicBot</h1>
+                <p>Tu mentor filosófico personal</p>
+            </div>
+            
+            <div class="quick-topics">
+                <h3>Temas Populares</h3>
+                <button class="topic-btn" onclick="sendQuickMessage('¿Cómo manejar el estrés?')">
+                    😰 Manejo del estrés
+                </button>
+                <button class="topic-btn" onclick="sendQuickMessage('Tengo ansiedad')">
+                    💭 Control de ansiedad
+                </button>
+                <button class="topic-btn" onclick="sendQuickMessage('Problemas en el trabajo')">
+                    💼 Conflictos laborales
+                </button>
+                <button class="topic-btn" onclick="sendQuickMessage('Ruptura amorosa')">
+                    💔 Relaciones difíciles
+                </button>
+                <button class="topic-btn" onclick="sendQuickMessage('Falta de disciplina')">
+                    🎯 Disciplina y hábitos
+                </button>
+                <button class="topic-btn" onclick="sendQuickMessage('No sé qué hacer con mi vida')">
+                    🌟 Propósito de vida
+                </button>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span>Consultas hoy:</span>
+                    <span>247</span>
                 </div>
-            </div>
-            <div class="card">
-                <h2><i class="fas fa-users"></i> Chats en Cola</h2>
-                <div class="kpi" id="chatsInQueue">--</div>
-                <p class="kpi-label">Esperando Agente</p>
-                <div class="chart-container-small">
-                    <canvas id="queueTrendChart"></canvas>
+                <div class="stat-item">
+                    <span>Usuarios activos:</span>
+                    <span>1,892</span>
                 </div>
-            </div>
-            <div class="card">
-                <h2><i class="fas fa-clock"></i> Espera Máxima</h2>
-                <div class="kpi" id="maxWaitTime">--:--</div>
-                <p class="kpi-label">En Cola (min:seg)</p>
-                <div class="metric-card"><strong>Promedio Hoy:</strong> <span id="avgWaitDisplay">--:--</span></div>
-            </div>
-            <div class="card">
-                <h2><i class="fas fa-headset"></i> Agentes</h2>
-                <div class="kpi" id="agentsAvailable">-- / --</div>
-                <p class="kpi-label">Disponibles / Totales</p>
-                <div id="agentStatus">
-                    <div class="metric-card">Disponibles: <span id="agentsOnline">0</span></div>
-                    <div class="metric-card">Ocupados: <span id="agentsBusy">0</span></div>
+                <div class="stat-item">
+                    <span>Satisfacción:</span>
+                    <span>94%</span>
                 </div>
             </div>
         </div>
-        <hr/>
-        <h3 class="section-title"><i class="fas fa-robot"></i> Interacción con el Bot (Tiempo Real)</h3>
-        <div class="grid-container">
-            <div class="card">
-                <h2>Consultas Frecuentes al Bot</h2>
-                <div class="chart-container">
-                    <canvas id="botIntentsChart"></canvas>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>EstoicBot - Sabiduría Antigua para Vida Moderna</h2>
+                <p class="status">Conectado • Responde en segundos</p>
+                <div class="online-indicator"></div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-message">
+                    <h3>🏛️ ¡Bienvenido a EstoicBot!</h3>
+                    <p>Soy tu mentor filosófico personal, entrenado con la sabiduría de Marco Aurelio, Epicteto y Séneca.</p>
+                    <p><strong>Pregúntame cualquier cosa sobre tus desafíos diarios</strong></p>
+                </div>
+                
+                <div class="message bot">
+                    <div class="avatar">🤖</div>
+                    <div class="message-content">
+                        <p>¡Hola! Soy tu asistente de filosofía estoica. Puedo ayudarte con:</p>
+                        <br>
+                        <p>• Manejo de estrés y ansiedad 😰<br>
+                        • Problemas en relaciones 💕<br>
+                        • Conflictos laborales 💼<br>
+                        • Desarrollo de disciplina 🎯<br>
+                        • Encontrar tu propósito 🌟</p>
+                        <br>
+                        <p><strong>¿En qué puedo ayudarte hoy?</strong></p>
+                        <div class="message-time">Hace unos segundos</div>
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <h2><i class="fas fa-chart-pie"></i> Resolución vs. Derivación</h2>
-                <div class="kpi" id="botResolutionRateRealTime">--%</div>
-                <p class="kpi-label">Chats resueltos por el Bot</p>
-                <div class="chart-container-small">
-                    <canvas id="escalationChart"></canvas>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="avatar">🤖</div>
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
             </div>
-            <div class="card">
-                <h2><i class="fas fa-smile"></i> Nivel de Satisfacción (CSAT)</h2>
-                <div class="kpi" id="liveCSAT">--/5</div>
-                <p class="kpi-label">Promedio de las últimas 10 encuestas</p>
-                <div class="chart-container-small">
-                    <canvas id="csatTrendChart"></canvas>
+
+            <div class="chat-input">
+                <div class="input-container">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Escribe tu pregunta aquí..."
+                        maxlength="500"
+                    >
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        ➤
+                    </button>
+                </div>
+                
+                <div class="suggestions">
+                    <button class="suggestion-chip" onclick="sendQuickMessage('¿Cómo controlar la ira?')">
+                        😡 Control de ira
+                    </button>
+                    <button class="suggestion-chip" onclick="sendQuickMessage('Miedo al fracaso')">
+                        😨 Miedo al fracaso
+                    </button>
+                    <button class="suggestion-chip" onclick="sendQuickMessage('Procrastinación')">
+                        ⏰ Procrastinación
+                    </button>
+                    <button class="suggestion-chip" onclick="sendQuickMessage('Comparación social')">
+                        📱 Redes sociales
+                    </button>
                 </div>
             </div>
-            <div class="card">
-                <h2><i class="fas fa-stopwatch"></i> Métricas Clave de Tiempos</h2>
-                <div class="metric-card"><strong>AHT (Promedio):</strong> <span id="avgHandleTimeRealTime">--:--</span></div>
-                <div class="metric-card"><strong>AWT (Promedio):</strong> <span id="avgWaitTimeQueueRealTime">--:--</span></div>
-                <div class="metric-card"><strong>Abandono (%):</strong> <span id="abandonmentRateRealTime">--%</span></div>
-            </div>
         </div>
     </div>
-    
-    <div id="historicalData" class="tab-content">
-        <h2 class="section-title">Análisis de Tendencias y Patrones</h2>
-        <div class="filter-controls">
-            <label for="dateRange"><i class="fas fa-calendar-alt"></i> Rango:</label>
-            <select id="dateRange">
-                <option value="last7days">Últimos 7 Días</option>
-                <option value="last30days" selected>Últimos 30 Días</option>
-                <option value="currentMonth">Este Mes</option>
-                <option value="lastMonth">Mes Pasado</option>
-            </select>
-            <button onclick="applyFilters()"><i class="fas fa-sync-alt"></i> Aplicar Filtros</button>
-        </div>
-        <hr/>
-        <div class="grid-container">
-            <div class="card">
-                <h2>Volumen Total de Chats</h2>
-                <div class="chart-container"><canvas id="totalChatsTrendChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Distribución Bot vs. Agente</h2>
-                <div class="chart-container"><canvas id="botVsAgentChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Tendencia del CSAT General</h2>
-                <div class="chart-container"><canvas id="csatHistoricalChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Evolución Tasa de Resolución Bot</h2>
-                <div class="chart-container"><canvas id="botResolutionHistoricalChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Opciones Más Consultadas (Histórico)</h2>
-                <div class="chart-container"><canvas id="topBotIntentsHistChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>CSAT por Opción del Bot</h2>
-                <div class="chart-container"><canvas id="csatPerBotIntentChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Tiempo Promedio de Conversación (AHT)</h2>
-                <div class="chart-container"><canvas id="ahtHistoricalChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Tiempo Promedio de Espera (AWT)</h2>
-                <div class="chart-container"><canvas id="awtHistoricalChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Tasa de Abandono en Cola</h2>
-                <div class="chart-container"><canvas id="abandonmentHistoricalChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Horas Pico de Demanda</h2>
-                <div class="chart-container"><canvas id="peakHoursChart"></canvas></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="crmLeads" class="tab-content">
-        <h2 class="section-title">Gestión de Leads y CRM</h2>
-        <div class="grid-container">
-             <div class="card">
-                <h2><i class="fas fa-user-check"></i> Leads Registrados</h2>
-                <div class="kpi" id="totalLeads">--</div>
-                <div class="metric-card"><strong>Hoy:</strong> <span id="todayLeads">--</span></div>
-                <div class="metric-card"><strong>Esta semana:</strong> <span id="weekLeads">--</span></div>
-                <div class="metric-card"><strong>Este mes:</strong> <span id="monthLeads">--</span></div>
-            </div>
-            <div class="card">
-                <h2><i class="fas fa-phone-alt"></i> Gestión de Llamadas</h2>
-                <div class="kpi" id="callsAnsweredRate">--%</div>
-                <p class="kpi-label">Tasa de Contestación</p>
-                <div class="metric-card"><strong>Realizadas:</strong> <span id="totalCallsMade">--</span></div>
-                <div class="metric-card"><strong>Contestadas:</strong> <span id="totalCallsAnswered">--</span></div>
-            </div>
-            <div class="card">
-                <h2><i class="fab fa-whatsapp"></i> WhatsApp Outbound</h2>
-                <div class="kpi" id="whatsappConversionRate">--%</div>
-                <p class="kpi-label">Conversión a Asesor</p>
-                <div class="metric-card"><strong>Enviados:</strong> <span id="whatsappSent">--</span></div>
-                <div class="metric-card"><strong>Respuestas:</strong> <span id="whatsappReplies">--</span></div>
-            </div>
-            <div class="card">
-                <h2><i class="fas fa-chart-pie"></i> Participación por Canal</h2>
-                <div class="chart-container"><canvas id="channelParticipationChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2><i class="fas fa-chart-line"></i> Tendencia de Leads Semanal</h2>
-                <div class="chart-container"><canvas id="leadsTrendChart"></canvas></div>
-            </div>
-            <div class="card">
-                <h2><i class="fas fa-phone-volume"></i> Efectividad de Llamadas por Hora</h2>
-                <div class="chart-container"><canvas id="callEffectivenessChart"></canvas></div>
-            </div>
-             <div class="card">
-                <h2><i class="fas fa-bullseye"></i> Tasa de Conversión por Canal</h2>
-                <div class="chart-container"><canvas id="conversionByChannelChart"></canvas></div>
-            </div>
-             <div class="card">
-                <h2><i class="fas fa-star"></i> Top 5 Programas Demandados</h2>
-                <div class="chart-container"><canvas id="topProgramsChart"></canvas></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="chartModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <canvas id="modalChartCanvas"></canvas>
-        </div>
-    </div>
-
 
     <script>
-    // =================================================================================
-    // 1. CONFIGURACIÓN GLOBAL Y VARIABLES
-    // =================================================================================
-    let charts = {}; // Objeto para almacenar todas las instancias de los gráficos
-    let modalChart = null; // Variable para el gráfico en la ventana modal
-
-    const colors = {
-        primary: '#002e19',
-        secondary: '#00c677',
-        accent: '#004d2b',
-        success: '#28a745',
-        warning: '#ffc107',
-        danger: '#dc3545',
-        info: '#17a2b8',
-        lightGray: 'rgba(0,0,0,0.1)'
-    };
-
-    // =================================================================================
-    // 2. LÓGICA DE NAVEGACIÓN Y MODAL
-    // =================================================================================
-    function openTab(evt, tabName) {
-        const tabcontent = document.getElementsByClassName("tab-content");
-        for (let i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-            tabcontent[i].classList.remove("active");
-        }
-        const tabbuttons = document.getElementsByClassName("tab-button");
-        for (let i = 0; i < tabbuttons.length; i++) {
-            tabbuttons[i].classList.remove("active");
-        }
-
-        document.getElementById(tabName).style.display = "block";
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
-
-        Object.keys(charts).forEach(key => {
-            if (charts[key] instanceof Chart) charts[key].destroy();
-        });
-        charts = {}; 
-
-        setTimeout(() => {
-            if (tabName === 'realTime') {
-                updateRealTimeKPIs();
-                initializeRealTimeCharts();
-            } else if (tabName === 'historicalData') {
-                initializeHistoricalCharts();
-            } else if (tabName === 'crmLeads') {
-                updateCRMKPIs();
-                initializeCRMCharts();
+        // Base de conocimiento estoica
+        const stoicKnowledge = {
+            'estres': {
+                keywords: ['estrés', 'estresado', 'estresante', 'tensión', 'presión', 'agobiado'],
+                responses: [
+                    "El estrés viene de querer controlar lo incontrolable. Como decía Epicteto: 'Hay cosas que puedes controlar y cosas que no'. ¿Puedes identificar qué parte de tu situación SÍ puedes controlar?",
+                    "Marco Aurelio escribió: 'Muy poco se necesita para hacer una vida feliz'. El estrés surge cuando perdemos perspectiva. Respira profundo y pregúntate: ¿esto importará en 5 años?",
+                    "El estrés es una alarma falsa de tu mente. Los estoicos enseñan que no son los eventos los que nos perturban, sino nuestros juicios sobre esos eventos. ¿Puedes cambiar tu perspectiva sobre la situación?"
+                ]
+            },
+            'ansiedad': {
+                keywords: ['ansiedad', 'ansioso', 'nervioso', 'preocupado', 'miedo', 'pánico'],
+                responses: [
+                    "La ansiedad es miedo al futuro, pero el presente es lo único real. Como enseñaba Marco Aurelio: 'Confina tus pensamientos al momento presente'. ¿Qué es lo único que puedes hacer AHORA mismo?",
+                    "Séneca decía: 'Sufrimos más en la imaginación que en la realidad'. Tu ansiedad son historias que tu mente crea sobre el futuro. ¿Qué evidencia REAL tienes de que eso pasará?",
+                    "La ansiedad pierde poder cuando la observas sin juzgar. Los estoicos practican la 'vista desde arriba': imagina que observas tu vida desde el espacio. ¿Tu preocupación se ve tan grande ahora?"
+                ]
+            },
+            'trabajo': {
+                keywords: ['trabajo', 'jefe', 'laboral', 'empleo', 'oficina', 'compañeros', 'carrera'],
+                responses: [
+                    "En el trabajo, solo puedes controlar tu esfuerzo y actitud, no las acciones de otros. Marco Aurelio era emperador pero escribió: 'Haz tu trabajo sin quejarte'. ¿Cómo puedes enfocar tu energía en lo que SÍ controlas?",
+                    "Los conflictos laborales son oportunidades para practicar virtudes estoicas. Como decía Epicteto: 'No son los eventos los que nos molestan, sino nuestros juicios sobre ellos'. ¿Puedes ver esta situación como entrenamiento para tu carácter?",
+                    "Séneca era consejero de Nerón (¡imagínate ese jefe!). Enseñaba que nuestro trabajo es practicar la excelencia independientemente de las circunstancias. ¿Qué puedes hacer hoy para ser la mejor versión de ti mismo en el trabajo?"
+                ]
+            },
+            'relaciones': {
+                keywords: ['relación', 'pareja', 'familia', 'amigos', 'ruptura', 'conflicto', 'amor', 'desamor'],
+                responses: [
+                    "Las relaciones son espejos de nuestro crecimiento personal. Como decía Marco Aurelio: 'Lo mejor de venganza es no ser como tu enemigo'. ¿Cómo puedes responder desde tus valores más altos, no desde la reacción?",
+                    "En las rupturas, recuerda las palabras de Epicteto: 'No digas que perdiste algo, sino que lo devolviste'. El amor verdadero no posee, aprecia. ¿Qué aprendiste de esta relación que te hace mejor persona?",
+                    "Los conflictos familiares enseñan paciencia. Séneca escribió: 'Cada nuevo comienzo viene del final de algún otro comienzo'. ¿Puedes ver este conflicto como oportunidad para crecer en comprensión?"
+                ]
+            },
+            'disciplina': {
+                keywords: ['disciplina', 'hábitos', 'procrastinación', 'pereza', 'motivación', 'constancia'],
+                responses: [
+                    "La disciplina es libertad disfrazada. Marco Aurelio se levantaba antes del amanecer y escribía: 'Al amanecer, cuando tengas problemas para levantarte, dite: me levanto para hacer el trabajo de un ser humano'. ¿Cuál es TU trabajo esencial?",
+                    "Epicteto enseñaba que somos lo que repetidamente hacemos. La excelencia no es un acto, sino un hábito. Comienza pequeño: ¿qué UNA cosa puedes hacer consistentemente por 7 días?",
+                    "La procrastinación es resistencia al crecimiento. Séneca decía: 'No es que tengamos tan poco tiempo, sino que perdemos tanto'. ¿Qué pequeña acción puedes tomar AHORA hacia tu objetivo?"
+                ]
+            },
+            'proposito': {
+                keywords: ['propósito', 'sentido', 'dirección', 'perdido', 'confundido', 'meaning', 'vida'],
+                responses: [
+                    "El propósito se encuentra sirviendo algo más grande que nosotros. Marco Aurelio escribió: 'Nacimos para trabajar juntos como pies, manos y ojos'. ¿Cómo puedes usar tus talentos únicos para ayudar a otros?",
+                    "Séneca enseñaba que el propósito no se encuentra, se construye día a día con nuestras acciones. ¿Qué tipo de persona quieres ser al final de tu vida? Comienza a ser esa persona HOY.",
+                    "Epicteto decía: 'No expliques tu filosofía. Encárnala'. Tu propósito se revela cuando vives según tus valores más profundos. ¿Cuáles son las 3 virtudes más importantes para ti?"
+                ]
+            },
+            'default': {
+                responses: [
+                    "Entiendo tu situación. Los estoicos enseñan que siempre tenemos el poder de elegir nuestra respuesta. ¿Puedes contarme más específicamente qué te preocupa?",
+                    "Como decía Marco Aurelio: 'Tienes poder sobre tu mente, no sobre los eventos externos. Date cuenta de esto y encontrarás fortaleza'. ¿En qué aspecto específico necesitas claridad?",
+                    "Los estoicos creían que todo desafío es una oportunidad para crecer. ¿Puedes describir tu situación para poder darte una guía más específica?"
+                ]
             }
-        }, 100);
-    }
+        };
 
-    // --- Lógica de la Ventana Modal ---
-    function enlargeChart(chartInstance) {
-        const modal = document.getElementById('chartModal');
-        const modalCanvas = document.getElementById('modalChartCanvas');
-        const modalCtx = modalCanvas.getContext('2d');
+        // Respuestas rápidas para preguntas específicas
+        const quickResponses = {
+            'cómo controlar la ira': "La ira es una emoción que elegimos. Marco Aurelio escribió: 'Cuando despiertes por la mañana, dite a ti mismo: las personas con las que trato hoy serán entrometidas, ingratas, arrogantes, deshonestas, celosas y hostilentas'. No es personal, es humano. ¿Puedes ver la situación desde la perspectiva de la otra persona?",
+            'miedo al fracaso': "El fracaso es información, no identidad. Como enseñaba Séneca: 'Todo nuevo comienzo viene del final de otro'. Los estoicos practicaban 'premeditatio malorum' - imaginar el fracaso para quitarle poder. ¿Qué es lo peor que podría pasar y cómo lo manejarías?",
+            'procrastinación': "La procrastinación es resistencia al crecimiento. Epicteto enseñaba: 'No esperes a que se presenten las circunstancias perfectas'. El momento perfecto es AHORA. ¿Qué acción pequeña puedes tomar en los próximos 5 minutos?",
+            'comparación social': "La comparación es el ladrón de la alegría. Marco Aurelio escribió: 'La felicidad de tu vida depende de la calidad de tus pensamientos'. En redes sociales ves highlights, no la vida real. ¿Puedes enfocar tu energía en tu propio crecimiento?"
+        };
 
-        if (modalChart) {
-            modalChart.destroy();
-        }
-
-        const modalOptions = {
-            ...chartInstance.config.options, // Copia las opciones originales
-            responsive: true,
-            maintainAspectRatio: false, // Permite que el gráfico llene el contenedor modal
-            plugins: {
-                ...chartInstance.config.options.plugins,
-                legend: { // Mejora la leyenda para la vista grande
-                    ...chartInstance.config.options.plugins?.legend,
-                    position: 'top', 
-                    labels: {
-                        font: {
-                            size: 14
-                        }
+        function findResponseCategory(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            for (const [category, data] of Object.entries(stoicKnowledge)) {
+                if (category === 'default') continue;
+                
+                for (const keyword of data.keywords) {
+                    if (lowerMessage.includes(keyword)) {
+                        return category;
                     }
                 }
             }
-        };
-        
-        modalChart = new Chart(modalCtx, {
-            type: chartInstance.config.type,
-            data: chartInstance.config.data,
-            options: modalOptions
+            return 'default';
+        }
+
+        function getRandomResponse(category) {
+            const responses = stoicKnowledge[category].responses;
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        function addMessage(content, isUser = false) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const currentTime = new Date().toLocaleTimeString('es-CO', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            messageDiv.innerHTML = `
+                <div class="avatar">${isUser ? '👤' : '🤖'}</div>
+                <div class="message-content">
+                    <p>${content}</p>
+                    <div class="message-time">${currentTime}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
+            
+            // Show typing indicator
+            showTyping();
+            
+            // Simulate bot response delay
+            setTimeout(() => {
+                hideTyping();
+                
+                // Check for quick responses first
+                const lowerMessage = message.toLowerCase();
+                let botResponse;
+                
+                // Check quick responses
+                for (const [key, response] of Object.entries(quickResponses)) {
+                    if (lowerMessage.includes(key)) {
+                        botResponse = response;
+                        break;
+                    }
+                }
+                
+                // If no quick response found, use category-based response
+                if (!botResponse) {
+                    const category = findResponseCategory(message);
+                    botResponse = getRandomResponse(category);
+                }
+                
+                addMessage(botResponse);
+                
+                // Add a follow-up question sometimes
+                if (Math.random() > 0.7) {
+                    setTimeout(() => {
+                        const followUps = [
+                            "¿Te ayuda esta perspectiva? ¿Hay algo específico que quieras profundizar?",
+                            "¿Cómo te sientes con esta reflexión? ¿Puedes aplicar esto a tu situación?",
+                            "¿Te resuena esta sabiduría antigua? ¿Qué parte te parece más útil?",
+                            "¿Has probado algo similar antes? ¿Qué otros desafíos estás enfrentando?"
+                        ];
+                        const randomFollowUp = followUps[Math.floor(Math.random() * followUps.length)];
+                        addMessage(randomFollowUp);
+                    }, 2000);
+                }
+            }, 1500 + Math.random() * 1000);
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+
+        // Event listeners
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
         });
 
-        modal.style.display = 'flex';
-    }
-
-    function closeModal() {
-        const modal = document.getElementById('chartModal');
-        if (modalChart) {
-            modalChart.destroy();
-            modalChart = null;
-        }
-        modal.style.display = 'none';
-    }
-
-    // =================================================================================
-    // 3. FUNCIONES PARA ACTUALIZAR KPIs
-    // =================================================================================
-    function formatTime(minutes, seconds) { return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; }
-    function updateRealTimeKPIs() {
-        if (!document.getElementById('realTime').classList.contains('active')) return;
-        document.getElementById('activeChats').textContent = Math.floor(Math.random() * 15) + 8;
-        document.getElementById('chatsInQueue').textContent = Math.floor(Math.random() * 7);
-        document.getElementById('maxWaitTime').textContent = formatTime(Math.floor(Math.random() * 4), Math.floor(Math.random() * 60));
-        document.getElementById('avgWaitDisplay').textContent = formatTime(Math.floor(Math.random() * 2), Math.floor(Math.random() * 60));
-        const totalAgents = 8;
-        const availableAgents = Math.floor(Math.random() * 4) + 2;
-        const busyAgents = Math.min(Math.floor(Math.random()*4), totalAgents - availableAgents);
-        document.getElementById('agentsAvailable').textContent = `${availableAgents} / ${totalAgents}`;
-        document.getElementById('agentsOnline').textContent = availableAgents;
-        document.getElementById('agentsBusy').textContent = busyAgents;
-        document.getElementById('botResolutionRateRealTime').textContent = `${Math.floor(Math.random() * 25) + 65}%`;
-        document.getElementById('liveCSAT').textContent = `${(Math.random() * 1.2 + 3.7).toFixed(1)}/5`;
-        document.getElementById('avgHandleTimeRealTime').textContent = formatTime(Math.floor(Math.random() * 3) + 3, Math.floor(Math.random() * 60));
-        document.getElementById('avgWaitTimeQueueRealTime').textContent = formatTime(Math.floor(Math.random() * 2), Math.floor(Math.random() * 60));
-        document.getElementById('abandonmentRateRealTime').textContent = `${Math.floor(Math.random() * 10) + 2}%`;
-    }
-    function updateCRMKPIs() {
-        if (!document.getElementById('crmLeads').classList.contains('active')) return;
-        document.getElementById('totalLeads').textContent = (Math.floor(Math.random() * 500) + 2500).toLocaleString();
-        document.getElementById('todayLeads').textContent = Math.floor(Math.random() * 30) + 45;
-        document.getElementById('weekLeads').textContent = Math.floor(Math.random() * 150) + 250;
-        document.getElementById('monthLeads').textContent = Math.floor(Math.random() * 600) + 1000;
-        const totalCallsMade = Math.floor(Math.random() * 200) + 850;
-        const totalCallsAnswered = Math.floor(totalCallsMade * (0.65 + Math.random() * 0.15));
-        document.getElementById('callsAnsweredRate').textContent = `${Math.floor((totalCallsAnswered / totalCallsMade) * 100)}%`;
-        document.getElementById('totalCallsMade').textContent = totalCallsMade;
-        document.getElementById('totalCallsAnswered').textContent = totalCallsAnswered;
-        const whatsappSent = Math.floor(Math.random() * 300) + 1200;
-        const whatsappReplies = Math.floor(whatsappSent * (0.45 + Math.random() * 0.15));
-        document.getElementById('whatsappConversionRate').textContent = `${Math.floor((whatsappReplies / whatsappSent) * 100)}%`;
-        document.getElementById('whatsappSent').textContent = whatsappSent;
-        document.getElementById('whatsappReplies').textContent = whatsappReplies;
-    }
-
-    // =================================================================================
-    // 4. FUNCIONES PARA CREAR GRÁFICOS (con event listeners para ampliar)
-    // =================================================================================
-    function createChart(ctx, config) {
-        if (!ctx) return null;
-        const chart = new Chart(ctx, config);
-        // Agregar evento de clic al contenedor del canvas para ampliar
-        ctx.canvas.parentElement.onclick = () => enlargeChart(chart);
-        return chart;
-    }
-    
-    function initializeRealTimeCharts() {
-        const activeChats = parseInt(document.getElementById('activeChats').textContent) || 10;
-        const botChats = Math.floor(activeChats * 0.7);
-        const agentChats = activeChats - botChats;
-        const botResolution = parseInt(document.getElementById('botResolutionRateRealTime').textContent) || 75;
-
-        charts.activeChatsPie = createChart(document.getElementById('activeChatsPieChart')?.getContext('2d'), { type: 'doughnut', data: { labels: ['Bot', 'Agentes'], datasets: [{ data: [botChats, agentChats], backgroundColor: [colors.primary, colors.secondary], borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
-        charts.queueTrend = createChart(document.getElementById('queueTrendChart')?.getContext('2d'), { type: 'line', data: { labels: ['-50s', '-40s', '-30s', '-20s', '-10s', 'Ahora'], datasets: [{ label: 'Chats en Cola', data: [3, 4, 2, 5, 3, parseInt(document.getElementById('chatsInQueue').textContent)], borderColor: colors.warning, backgroundColor: colors.warning + '30', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 10 } }, plugins: { legend: { display: false } } } });
-        charts.botIntents = createChart(document.getElementById('botIntentsChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Admisiones', 'Posgrados', 'Pagos', 'Soporte AV', 'Horarios'], datasets: [{ label: 'Consultas (ahora)', data: [8, 6, 5, 3, 2], backgroundColor: [colors.primary, colors.secondary, colors.accent, colors.info, colors.warning], borderRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } } });
-        charts.escalation = createChart(document.getElementById('escalationChart')?.getContext('2d'), { type: 'doughnut', data: { labels: ['Resuelto por Bot', 'Derivado'], datasets: [{ data: [botResolution, 100 - botResolution], backgroundColor: [colors.success, colors.warning], borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
-        charts.csatTrend = createChart(document.getElementById('csatTrendChart')?.getContext('2d'), { type: 'line', data: { labels: ['-4', '-3', '-2', '-1', 'Último'], datasets: [{ label: 'CSAT', data: [4.1, 4.3, 4.0, 4.5, parseFloat(document.getElementById('liveCSAT').textContent)], borderColor: colors.primary, backgroundColor: colors.primary + '30', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false, min: 3, max: 5 } }, plugins: { legend: { display: false } } } });
-    }
-
-    function initializeHistoricalCharts() {
-        charts.totalChatsTrend = createChart(document.getElementById('totalChatsTrendChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'Chats Totales', data: [800, 870, 950, 980], borderColor: colors.primary, backgroundColor: colors.primary + '20', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false } });
-        charts.botVsAgent = createChart(document.getElementById('botVsAgentChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'Bot', data: [600, 650, 700, 750], backgroundColor: colors.primary, borderRadius: 5 }, { label: 'Agente', data: [200, 220, 250, 230], backgroundColor: colors.secondary, borderRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } } });
-        charts.csatHistorical = createChart(document.getElementById('csatHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'CSAT Promedio', data: [4.1, 4.3, 4.2, 4.4], borderColor: colors.success, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 3.5, max: 5 } } } });
-        charts.botResolutionHistorical = createChart(document.getElementById('botResolutionHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'Tasa de Resolución (%)', data: [70, 72, 68, 75], borderColor: colors.info, tension: 0.4, fill: true, backgroundColor: colors.info + '20' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 60, max: 80 } } } });
-        charts.topBotIntentsHist = createChart(document.getElementById('topBotIntentsHistChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Admisiones', 'Info Posgrados', 'Pagos', 'Bienestar', 'Biblioteca'], datasets: [{ label: 'Consultas', data: [2500, 1800, 1500, 900, 700], backgroundColor: [colors.primary, colors.secondary, colors.accent, colors.info, colors.warning], borderRadius: 8 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
-        charts.csatPerBotIntent = createChart(document.getElementById('csatPerBotIntentChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Admisiones', 'Posgrados', 'Pagos', 'Soporte AV', 'Bienestar'], datasets: [{ label: 'CSAT Promedio', data: [4.5, 4.2, 3.9, 4.0, 4.3], backgroundColor: [colors.success, colors.info, colors.warning, colors.info, colors.success], borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 3.5, max: 5 } } } });
-        charts.ahtHistorical = createChart(document.getElementById('ahtHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'AHT (min)', data: [5.5, 5.0, 4.75, 4.6], borderColor: colors.primary, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Minutos' } } } } });
-        charts.awtHistorical = createChart(document.getElementById('awtHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'AWT (min)', data: [2.1, 1.8, 2.0, 1.5], borderColor: colors.warning, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Minutos' } } } } });
-        charts.abandonmentHistorical = createChart(document.getElementById('abandonmentHistoricalChart')?.getContext('2d'), { type: 'line', data: { labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'], datasets: [{ label: 'Abandono (%)', data: [10, 8, 9, 6], borderColor: colors.danger, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: '%' } } } } });
-        charts.peakHours = createChart(document.getElementById('peakHoursChart')?.getContext('2d'), { type: 'bar', data: { labels: ['8-10h', '10-12h', '14-16h', '16-18h'], datasets: [ { label: 'Lunes-Viernes', data: [120, 180, 160, 100], backgroundColor: colors.primary }] }, options: { responsive: true, maintainAspectRatio: false } });
-    }
-    
-    function initializeCRMCharts() {
-        // --- GRÁFICOS MODIFICADOS ---
-        charts.channelParticipation = createChart(document.getElementById('channelParticipationChart')?.getContext('2d'), { type: 'doughnut', data: { labels: ['Voz', 'WhatsApp'], datasets: [{ data: [60, 40], backgroundColor: [colors.primary, colors.success], borderWidth: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
-        charts.conversionByChannel = createChart(document.getElementById('conversionByChannelChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Voz', 'WhatsApp'], datasets: [{ label: 'Tasa Conversión (%)', data: [18, 15], backgroundColor: [colors.success, colors.info], borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { max: 25 } } } });
-        
-        // --- OTROS GRÁFICOS DE CRM ---
-        charts.leadsTrend = createChart(document.getElementById('leadsTrendChart')?.getContext('2d'), { type: 'line', data: { labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'], datasets: [{ label: 'Leads Registrados', data: [45, 52, 48, 65, 58, 32], borderColor: colors.primary, tension: 0.4, fill: true, backgroundColor: colors.primary+'20' }] }, options: { responsive: true, maintainAspectRatio: false } });
-        charts.callEffectiveness = createChart(document.getElementById('callEffectivenessChart')?.getContext('2d'), { type: 'bar', data: { labels: ['8-10', '10-12', '14-16', '16-18'], datasets: [{ label: 'Realizadas', data: [80, 120, 150, 140], backgroundColor: colors.primary+'90' }, { label: 'Contestadas', data: [60, 96, 120, 105], backgroundColor: colors.success+'90' }] }, options: { responsive: true, maintainAspectRatio: false } });
-        charts.topPrograms = createChart(document.getElementById('topProgramsChart')?.getContext('2d'), { type: 'bar', data: { labels: ['Derecho', 'Admin.', 'Economía', 'Psicología', 'Com.'], datasets: [{ label: 'Leads', data: [250, 200, 180, 150, 120], backgroundColor: [colors.primary, colors.secondary, colors.accent, colors.info, colors.warning], borderRadius: 8 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
-    }
-    
-    // =================================================================================
-    // 5. INICIALIZACIÓN Y EVENTOS
-    // =================================================================================
-    function applyFilters() {
-        console.log("Filtros aplicados.");
-        openTab({ currentTarget: document.querySelector('.tab-button.active') }, 'historicalData');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // Cargar la primera pestaña por defecto
-        updateRealTimeKPIs();
-        initializeRealTimeCharts();
-        
-        // Configurar eventos para cerrar el modal
-        const modal = document.getElementById('chartModal');
-        const closeBtn = document.querySelector('.close-modal');
-        closeBtn.onclick = closeModal;
-        modal.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
-        };
-
-        // Simular actualización de KPIs en tiempo real
-        setInterval(() => {
-            if (document.getElementById('realTime').classList.contains('active')) {
-                updateRealTimeKPIs();
-            } else if (document.getElementById('crmLeads').classList.contains('active')) {
-                updateCRMKPIs();
-            }
-        }, 7000);
-    });
-
+        // Add some initial interaction
+        setTimeout(() => {
+            addMessage("Por cierto, veo que es tu primera vez aquí. ¡Fantástico! 🎉 Puedes preguntarme sobre cualquier situación específica que estés viviendo. Los estoicos creían que la filosofía debe ser práctica, no solo teórica.");
+        }, 3000);
     </script>
 </body>
 </html>
