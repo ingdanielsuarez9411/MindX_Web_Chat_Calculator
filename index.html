@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EstoicBot - Tu Mentor Filosófico Digital</title>
+    <title>EstoicBot - Tu Mentor Filosófico con IA</title>
     <style>
         * {
             margin: 0;
@@ -62,6 +62,42 @@
             margin-bottom: 15px;
         }
 
+        .ai-status {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ai-status h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #4ade80;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-connected {
+            background: #4ade80;
+        }
+
+        .status-error {
+            background: #ef4444;
+        }
+
         .quick-topics {
             margin-top: 20px;
         }
@@ -91,9 +127,31 @@
             transform: translateY(-2px);
         }
 
-        .stats {
+        .api-config {
             margin-top: auto;
             padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .config-btn {
+            width: 100%;
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .config-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        .stats {
+            margin-top: 15px;
+            padding-top: 15px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -102,6 +160,82 @@
             justify-content: space-between;
             margin-bottom: 8px;
             font-size: 12px;
+        }
+
+        /* Modal para configuración */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .modal input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
         }
 
         /* Chat Area */
@@ -223,6 +357,25 @@
             font-size: 10px;
             opacity: 0.6;
             margin-top: 5px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(45deg, #4ade80, #22c55e);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 12px;
         }
 
         .typing-indicator {
@@ -364,6 +517,12 @@
             .suggestion-chip {
                 text-align: center;
             }
+
+            .modal-content {
+                margin: 20% auto;
+                width: 95%;
+                padding: 20px;
+            }
         }
 
         /* Welcome message special styling */
@@ -375,6 +534,22 @@
             border-radius: 15px;
             margin: 20px 0;
         }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -384,35 +559,49 @@
             <div class="logo">
                 <div class="philosophy-icon">🏛️</div>
                 <h1>EstoicBot</h1>
-                <p>Tu mentor filosófico personal</p>
+                <p>Mentor filosófico con IA avanzada</p>
+            </div>
+
+            <div class="ai-status">
+                <h3>🤖 Estado de la IA</h3>
+                <div class="status-indicator">
+                    <div class="status-dot status-connected" id="aiStatusDot"></div>
+                    <span id="aiStatusText">Conectado a OpenAI</span>
+                </div>
             </div>
             
             <div class="quick-topics">
                 <h3>Temas Populares</h3>
-                <button class="topic-btn" onclick="sendQuickMessage('¿Cómo manejar el estrés?')">
+                <button class="topic-btn" onclick="sendQuickMessage('¿Cómo manejar el estrés laboral cuando todo parece fuera de control?')">
                     😰 Manejo del estrés
                 </button>
-                <button class="topic-btn" onclick="sendQuickMessage('Tengo ansiedad')">
+                <button class="topic-btn" onclick="sendQuickMessage('Tengo mucha ansiedad por mi futuro')">
                     💭 Control de ansiedad
                 </button>
-                <button class="topic-btn" onclick="sendQuickMessage('Problemas en el trabajo')">
+                <button class="topic-btn" onclick="sendQuickMessage('Mi jefe es muy tóxico, ¿cómo lidiar con esto?')">
                     💼 Conflictos laborales
                 </button>
-                <button class="topic-btn" onclick="sendQuickMessage('Ruptura amorosa')">
+                <button class="topic-btn" onclick="sendQuickMessage('Terminé con mi pareja y me siento devastado')">
                     💔 Relaciones difíciles
                 </button>
-                <button class="topic-btn" onclick="sendQuickMessage('Falta de disciplina')">
+                <button class="topic-btn" onclick="sendQuickMessage('No logro ser disciplinado con mis hábitos')">
                     🎯 Disciplina y hábitos
                 </button>
-                <button class="topic-btn" onclick="sendQuickMessage('No sé qué hacer con mi vida')">
+                <button class="topic-btn" onclick="sendQuickMessage('Me siento perdido, no sé qué hacer con mi vida')">
                     🌟 Propósito de vida
+                </button>
+            </div>
+
+            <div class="api-config">
+                <button class="config-btn" onclick="openApiConfig()">
+                    ⚙️ Configurar API OpenAI
                 </button>
             </div>
             
             <div class="stats">
                 <div class="stat-item">
-                    <span>Consultas hoy:</span>
-                    <span>247</span>
+                    <span>Consultas IA hoy:</span>
+                    <span id="aiQueries">47</span>
                 </div>
                 <div class="stat-item">
                     <span>Usuarios activos:</span>
@@ -420,7 +609,7 @@
                 </div>
                 <div class="stat-item">
                     <span>Satisfacción:</span>
-                    <span>94%</span>
+                    <span>97%</span>
                 </div>
             </div>
         </div>
@@ -428,30 +617,32 @@
         <!-- Chat Container -->
         <div class="chat-container">
             <div class="chat-header">
-                <h2>EstoicBot - Sabiduría Antigua para Vida Moderna</h2>
-                <p class="status">Conectado • Responde en segundos</p>
+                <h2>EstoicBot AI - Sabiduría Estoica Potenciada por IA</h2>
+                <p class="status">Conectado • Respuestas inteligentes en tiempo real</p>
                 <div class="online-indicator"></div>
             </div>
 
             <div class="chat-messages" id="chatMessages">
                 <div class="welcome-message">
-                    <h3>🏛️ ¡Bienvenido a EstoicBot!</h3>
-                    <p>Soy tu mentor filosófico personal, entrenado con la sabiduría de Marco Aurelio, Epicteto y Séneca.</p>
-                    <p><strong>Pregúntame cualquier cosa sobre tus desafíos diarios</strong></p>
+                    <h3>🏛️ ¡Bienvenido a EstoicBot AI!</h3>
+                    <p>Soy tu mentor filosófico personal potenciado por Inteligencia Artificial, entrenado con la sabiduría de Marco Aurelio, Epicteto, Séneca y filosofía estoica moderna.</p>
+                    <p><strong>Cuéntame tu situación específica y te daré consejos personalizados</strong></p>
                 </div>
                 
                 <div class="message bot">
                     <div class="avatar">🤖</div>
                     <div class="message-content">
-                        <p>¡Hola! Soy tu asistente de filosofía estoica. Puedo ayudarte con:</p>
+                        <p>¡Hola! Soy EstoicBot AI, tu asistente filosófico inteligente. <span class="ai-badge">IA</span></p>
                         <br>
-                        <p>• Manejo de estrés y ansiedad 😰<br>
-                        • Problemas en relaciones 💕<br>
-                        • Conflictos laborales 💼<br>
-                        • Desarrollo de disciplina 🎯<br>
-                        • Encontrar tu propósito 🌟</p>
+                        <p>A diferencia de chatbots básicos, puedo entender el contexto completo de tu situación y darte consejos estoicos personalizados para:</p>
                         <br>
-                        <p><strong>¿En qué puedo ayudarte hoy?</strong></p>
+                        <p>• Situaciones específicas de estrés y ansiedad 😰<br>
+                        • Conflictos interpersonales complejos 💕<br>
+                        • Decisiones difíciles en el trabajo 💼<br>
+                        • Desarrollo de disciplina personal 🎯<br>
+                        • Búsqueda de propósito y significado 🌟</p>
+                        <br>
+                        <p><strong>Describe tu situación con todo el detalle que quieras. Mientras más contexto me des, mejor te podré ayudar.</strong></p>
                         <div class="message-time">Hace unos segundos</div>
                     </div>
                 </div>
@@ -471,8 +662,8 @@
                     <input 
                         type="text" 
                         id="messageInput" 
-                        placeholder="Escribe tu pregunta aquí..."
-                        maxlength="500"
+                        placeholder="Describe tu situación específica..."
+                        maxlength="2000"
                     >
                     <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                         ➤
@@ -480,112 +671,277 @@
                 </div>
                 
                 <div class="suggestions">
-                    <button class="suggestion-chip" onclick="sendQuickMessage('¿Cómo controlar la ira?')">
-                        😡 Control de ira
+                    <button class="suggestion-chip" onclick="sendQuickMessage('Mi jefe me critica constantemente y afecta mi autoestima')">
+                        😡 Jefe tóxico
                     </button>
-                    <button class="suggestion-chip" onclick="sendQuickMessage('Miedo al fracaso')">
+                    <button class="suggestion-chip" onclick="sendQuickMessage('Tengo miedo de fracasar en mi nuevo emprendimiento')">
                         😨 Miedo al fracaso
                     </button>
-                    <button class="suggestion-chip" onclick="sendQuickMessage('Procrastinación')">
+                    <button class="suggestion-chip" onclick="sendQuickMessage('Procrastino mucho con mis estudios')">
                         ⏰ Procrastinación
                     </button>
-                    <button class="suggestion-chip" onclick="sendQuickMessage('Comparación social')">
-                        📱 Redes sociales
+                    <button class="suggestion-chip" onclick="sendQuickMessage('Las redes sociales me hacen sentir inferior')">
+                        📱 Comparación social
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal de configuración API -->
+    <div id="apiModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeApiConfig()">&times;</span>
+            <h2>🔑 Configuración OpenAI API</h2>
+            <p style="margin-bottom: 20px; color: #666; font-size: 14px;">
+                Para usar la IA avanzada, necesitas una API key de OpenAI. 
+                <a href="https://platform.openai.com/api-keys" target="_blank" style="color: #667eea;">Obtén la tuya aquí</a>
+            </p>
+            <input 
+                type="password" 
+                id="apiKeyInput" 
+                placeholder="sk-..." 
+                style="font-family: monospace;"
+            >
+            <p style="font-size: 12px; color: #999; margin-bottom: 20px;">
+                Tu API key se guarda localmente y nunca se envía a terceros.
+            </p>
+            <div class="modal-buttons">
+                <button class="modal-btn btn-cancel" onclick="closeApiConfig()">Cancelar</button>
+                <button class="modal-btn btn-save" onclick="saveApiKey()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Base de conocimiento estoica
-        const stoicKnowledge = {
-            'estres': {
-                keywords: ['estrés', 'estresado', 'estresante', 'tensión', 'presión', 'agobiado'],
-                responses: [
-                    "El estrés viene de querer controlar lo incontrolable. Como decía Epicteto: 'Hay cosas que puedes controlar y cosas que no'. ¿Puedes identificar qué parte de tu situación SÍ puedes controlar?",
-                    "Marco Aurelio escribió: 'Muy poco se necesita para hacer una vida feliz'. El estrés surge cuando perdemos perspectiva. Respira profundo y pregúntate: ¿esto importará en 5 años?",
-                    "El estrés es una alarma falsa de tu mente. Los estoicos enseñan que no son los eventos los que nos perturban, sino nuestros juicios sobre esos eventos. ¿Puedes cambiar tu perspectiva sobre la situación?"
-                ]
-            },
-            'ansiedad': {
-                keywords: ['ansiedad', 'ansioso', 'nervioso', 'preocupado', 'miedo', 'pánico'],
-                responses: [
-                    "La ansiedad es miedo al futuro, pero el presente es lo único real. Como enseñaba Marco Aurelio: 'Confina tus pensamientos al momento presente'. ¿Qué es lo único que puedes hacer AHORA mismo?",
-                    "Séneca decía: 'Sufrimos más en la imaginación que en la realidad'. Tu ansiedad son historias que tu mente crea sobre el futuro. ¿Qué evidencia REAL tienes de que eso pasará?",
-                    "La ansiedad pierde poder cuando la observas sin juzgar. Los estoicos practican la 'vista desde arriba': imagina que observas tu vida desde el espacio. ¿Tu preocupación se ve tan grande ahora?"
-                ]
-            },
-            'trabajo': {
-                keywords: ['trabajo', 'jefe', 'laboral', 'empleo', 'oficina', 'compañeros', 'carrera'],
-                responses: [
-                    "En el trabajo, solo puedes controlar tu esfuerzo y actitud, no las acciones de otros. Marco Aurelio era emperador pero escribió: 'Haz tu trabajo sin quejarte'. ¿Cómo puedes enfocar tu energía en lo que SÍ controlas?",
-                    "Los conflictos laborales son oportunidades para practicar virtudes estoicas. Como decía Epicteto: 'No son los eventos los que nos molestan, sino nuestros juicios sobre ellos'. ¿Puedes ver esta situación como entrenamiento para tu carácter?",
-                    "Séneca era consejero de Nerón (¡imagínate ese jefe!). Enseñaba que nuestro trabajo es practicar la excelencia independientemente de las circunstancias. ¿Qué puedes hacer hoy para ser la mejor versión de ti mismo en el trabajo?"
-                ]
-            },
-            'relaciones': {
-                keywords: ['relación', 'pareja', 'familia', 'amigos', 'ruptura', 'conflicto', 'amor', 'desamor'],
-                responses: [
-                    "Las relaciones son espejos de nuestro crecimiento personal. Como decía Marco Aurelio: 'Lo mejor de venganza es no ser como tu enemigo'. ¿Cómo puedes responder desde tus valores más altos, no desde la reacción?",
-                    "En las rupturas, recuerda las palabras de Epicteto: 'No digas que perdiste algo, sino que lo devolviste'. El amor verdadero no posee, aprecia. ¿Qué aprendiste de esta relación que te hace mejor persona?",
-                    "Los conflictos familiares enseñan paciencia. Séneca escribió: 'Cada nuevo comienzo viene del final de algún otro comienzo'. ¿Puedes ver este conflicto como oportunidad para crecer en comprensión?"
-                ]
-            },
-            'disciplina': {
-                keywords: ['disciplina', 'hábitos', 'procrastinación', 'pereza', 'motivación', 'constancia'],
-                responses: [
-                    "La disciplina es libertad disfrazada. Marco Aurelio se levantaba antes del amanecer y escribía: 'Al amanecer, cuando tengas problemas para levantarte, dite: me levanto para hacer el trabajo de un ser humano'. ¿Cuál es TU trabajo esencial?",
-                    "Epicteto enseñaba que somos lo que repetidamente hacemos. La excelencia no es un acto, sino un hábito. Comienza pequeño: ¿qué UNA cosa puedes hacer consistentemente por 7 días?",
-                    "La procrastinación es resistencia al crecimiento. Séneca decía: 'No es que tengamos tan poco tiempo, sino que perdemos tanto'. ¿Qué pequeña acción puedes tomar AHORA hacia tu objetivo?"
-                ]
-            },
-            'proposito': {
-                keywords: ['propósito', 'sentido', 'dirección', 'perdido', 'confundido', 'meaning', 'vida'],
-                responses: [
-                    "El propósito se encuentra sirviendo algo más grande que nosotros. Marco Aurelio escribió: 'Nacimos para trabajar juntos como pies, manos y ojos'. ¿Cómo puedes usar tus talentos únicos para ayudar a otros?",
-                    "Séneca enseñaba que el propósito no se encuentra, se construye día a día con nuestras acciones. ¿Qué tipo de persona quieres ser al final de tu vida? Comienza a ser esa persona HOY.",
-                    "Epicteto decía: 'No expliques tu filosofía. Encárnala'. Tu propósito se revela cuando vives según tus valores más profundos. ¿Cuáles son las 3 virtudes más importantes para ti?"
-                ]
-            },
-            'default': {
-                responses: [
-                    "Entiendo tu situación. Los estoicos enseñan que siempre tenemos el poder de elegir nuestra respuesta. ¿Puedes contarme más específicamente qué te preocupa?",
-                    "Como decía Marco Aurelio: 'Tienes poder sobre tu mente, no sobre los eventos externos. Date cuenta de esto y encontrarás fortaleza'. ¿En qué aspecto específico necesitas claridad?",
-                    "Los estoicos creían que todo desafío es una oportunidad para crecer. ¿Puedes describir tu situación para poder darte una guía más específica?"
-                ]
+        // ============ CONFIGURACIÓN DE OPENAI API ============
+        
+        // 🔑 AQUÍ CONFIGURAS TU API KEY DE OPENAI
+        let OPENAI_API_KEY = localStorage.getItem('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') || '';
+        
+        // 🚀 AQUÍ PUEDES CAMBIAR EL MODELO DE OPENAI
+        const OPENAI_MODEL = 'gpt-4o-mini'; // Más económico: gpt-3.5-turbo, Más potente: gpt-4
+        
+        // 📊 CONFIGURACIÓN DE LA API
+        const OPENAI_CONFIG = {
+            apiUrl: 'https://api.openai.com/v1/chat/completions',
+            maxTokens: 1000,
+            temperature: 0.7,
+            systemPrompt: `Eres EstoicBot, un mentor filosófico especializado en estoicismo moderno para jóvenes latinos. 
+
+PERSONALIDAD:
+- Eres sabio pero accesible, como un hermano mayor filosófico
+- Usas lenguaje contemporáneo sin perder profundidad
+- Incluyes emojis ocasionales para conectar con público joven
+- Eres empático pero directo, no endulzas la realidad
+
+CONOCIMIENTO:
+- Dominas perfectamente a Marco Aurelio, Epicteto, Séneca y estoicismo moderno
+- Entiendes el contexto colombiano/latino: trabajo, familia, educación, relaciones
+- Adaptas la filosofía antigua a problemas modernos: redes sociales, ansiedad, carrera
+
+ESTILO DE RESPUESTA:
+- Máximo 150 palabras por respuesta
+- Siempre incluye una cita estoica relevante
+- Da consejos prácticos y específicos
+- Haz preguntas que inviten a la reflexión
+- Usa analogías modernas que los jóvenes entiendan
+
+ESTRUCTURA:
+1. Reconoce y valida el sentimiento
+2. Perspectiva estoica aplicable
+3. Cita relevante de filósofo estoico
+4. Consejo práctico específico
+5. Pregunta reflexiva para continuar
+
+Ejemplo: "Entiendo que te sientes abrumado 😔 Los estoicos enseñan que el estrés viene de querer controlar lo incontrolable. Como decía Epicteto: 'Hay cosas que puedes controlar y cosas que no'. Enfócate en lo que SÍ está en tus manos: tu esfuerzo, actitud y respuesta. ¿Puedes identificar qué parte de esta situación específicamente puedes controlar?"
+
+NUNCA:
+- Seas condescendiente o pedante
+- Uses lenguaje excesivamente formal
+- Ignores el contexto específico del usuario
+- Des respuestas genéricas o vagas
+
+Responde siempre en español colombiano neutral.`
+        };
+
+        // Variables globales
+        let isApiConfigured = !!OPENAI_API_KEY;
+        let requestCount = 0;
+        let isProcessing = false;
+
+        // ============ FUNCIONES PRINCIPALES ============
+
+        async function callOpenAI(userMessage, conversationHistory = []) {
+            if (!OPENAI_API_KEY) {
+                throw new Error('API key no configurada');
             }
-        };
 
-        // Respuestas rápidas para preguntas específicas
-        const quickResponses = {
-            'cómo controlar la ira': "La ira es una emoción que elegimos. Marco Aurelio escribió: 'Cuando despiertes por la mañana, dite a ti mismo: las personas con las que trato hoy serán entrometidas, ingratas, arrogantes, deshonestas, celosas y hostilentas'. No es personal, es humano. ¿Puedes ver la situación desde la perspectiva de la otra persona?",
-            'miedo al fracaso': "El fracaso es información, no identidad. Como enseñaba Séneca: 'Todo nuevo comienzo viene del final de otro'. Los estoicos practicaban 'premeditatio malorum' - imaginar el fracaso para quitarle poder. ¿Qué es lo peor que podría pasar y cómo lo manejarías?",
-            'procrastinación': "La procrastinación es resistencia al crecimiento. Epicteto enseñaba: 'No esperes a que se presenten las circunstancias perfectas'. El momento perfecto es AHORA. ¿Qué acción pequeña puedes tomar en los próximos 5 minutos?",
-            'comparación social': "La comparación es el ladrón de la alegría. Marco Aurelio escribió: 'La felicidad de tu vida depende de la calidad de tus pensamientos'. En redes sociales ves highlights, no la vida real. ¿Puedes enfocar tu energía en tu propio crecimiento?"
-        };
+            // Construir historial de conversación para contexto
+            const messages = [
+                { role: 'system', content: OPENAI_CONFIG.systemPrompt },
+                ...conversationHistory,
+                { role: 'user', content: userMessage }
+            ];
 
-        function findResponseCategory(message) {
+            const response = await fetch(OPENAI_CONFIG.apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${OPENAI_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: OPENAI_MODEL,
+                    messages: messages,
+                    max_tokens: OPENAI_CONFIG.maxTokens,
+                    temperature: OPENAI_CONFIG.temperature,
+                    presence_penalty: 0.1,
+                    frequency_penalty: 0.1
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || `Error HTTP: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        // Historial de conversación para contexto
+        let conversationHistory = [];
+
+        function addToHistory(role, content) {
+            conversationHistory.push({ role, content });
+            
+            // Mantener solo las últimas 10 interacciones para no exceder límites
+            if (conversationHistory.length > 20) {
+                conversationHistory = conversationHistory.slice(-20);
+            }
+        }
+
+        async function getBotResponse(userMessage) {
+            try {
+                updateAIStatus('processing', 'Procesando con IA...');
+                
+                const aiResponse = await callOpenAI(userMessage, conversationHistory);
+                
+                // Agregar al historial
+                addToHistory('user', userMessage);
+                addToHistory('assistant', aiResponse);
+                
+                // Actualizar contador
+                requestCount++;
+                document.getElementById('aiQueries').textContent = requestCount;
+                
+                updateAIStatus('connected', 'Conectado a OpenAI');
+                return aiResponse;
+                
+            } catch (error) {
+                console.error('Error OpenAI:', error);
+                updateAIStatus('error', 'Error de conexión');
+                
+                // Fallback a respuestas locales
+                return getFallbackResponse(userMessage, error.message);
+            }
+        }
+
+        function getFallbackResponse(userMessage, errorMessage) {
+            const fallbackResponses = [
+                `Disculpa, tengo problemas técnicos temporales 😅 Pero puedo ayudarte basándome en mi conocimiento estoico: 
+
+${getLocalStoicResponse(userMessage)}
+
+*Respuesta de emergencia - Pronto volveré con IA completa*`,
+                
+                `Mi conexión con OpenAI está intermitente, pero aquí tienes sabiduría estoica clásica:
+
+${getLocalStoicResponse(userMessage)}
+
+*Sistema local activado - Funcionalidad IA se restaurará pronto*`
+            ];
+            
+            return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+        }
+
+        function getLocalStoicResponse(message) {
+            // Base de conocimiento local simplificada como fallback
             const lowerMessage = message.toLowerCase();
             
-            for (const [category, data] of Object.entries(stoicKnowledge)) {
-                if (category === 'default') continue;
-                
-                for (const keyword of data.keywords) {
-                    if (lowerMessage.includes(keyword)) {
-                        return category;
-                    }
-                }
+            if (lowerMessage.includes('estrés') || lowerMessage.includes('presión') || lowerMessage.includes('agobio')) {
+                return `El estrés surge cuando perdemos perspectiva. Como enseñaba Marco Aurelio: "Tienes poder sobre tu mente, no sobre los eventos externos. Date cuenta de esto y encontrarás fortaleza." ¿Puedes identificar qué parte de tu situación SÍ puedes controlar?`;
             }
-            return 'default';
+            
+            if (lowerMessage.includes('ansiedad') || lowerMessage.includes('nervios') || lowerMessage.includes('preocup')) {
+                return `La ansiedad es miedo al futuro, pero solo el presente es real. Séneca decía: "Sufrimos más en la imaginación que en la realidad." Respira profundo y enfócate en el aquí y ahora. ¿Qué es lo único que puedes hacer en este momento?`;
+            }
+            
+            if (lowerMessage.includes('trabajo') || lowerMessage.includes('jefe') || lowerMessage.includes('laboral')) {
+                return `En el trabajo solo controlas tu esfuerzo y actitud. Epicteto enseñaba: "No son los eventos los que nos perturban, sino nuestros juicios sobre ellos." ¿Cómo puedes responder desde tus valores más altos?`;
+            }
+            
+            if (lowerMessage.includes('relación') || lowerMessage.includes('pareja') || lowerMessage.includes('amor')) {
+                return `Las relaciones son oportunidades de crecimiento. Marco Aurelio escribió: "La mejor venganza es no ser como tu enemigo." ¿Puedes ver este conflicto como práctica de paciencia y comprensión?`;
+            }
+            
+            return `Todo desafío es una oportunidad para crecer en sabiduría. Como decía Epicteto: "No busques que los eventos sucedan como tú quieres, sino acepta los eventos como suceden y tendrás paz." ¿Puedes contarme más específicamente qué te preocupa?`;
         }
 
-        function getRandomResponse(category) {
-            const responses = stoicKnowledge[category].responses;
-            return responses[Math.floor(Math.random() * responses.length)];
+        function updateAIStatus(status, text) {
+            const dot = document.getElementById('aiStatusDot');
+            const statusText = document.getElementById('aiStatusText');
+            
+            dot.className = 'status-dot';
+            
+            switch(status) {
+                case 'connected':
+                    dot.classList.add('status-connected');
+                    break;
+                case 'error':
+                    dot.classList.add('status-error');
+                    break;
+                case 'processing':
+                    dot.classList.add('status-connected');
+                    break;
+            }
+            
+            statusText.textContent = text;
         }
 
-        function addMessage(content, isUser = false) {
+        // ============ CONFIGURACIÓN DE API ============
+
+        function openApiConfig() {
+            document.getElementById('apiModal').style.display = 'block';
+            document.getElementById('apiKeyInput').value = OPENAI_API_KEY;
+        }
+
+        function closeApiConfig() {
+            document.getElementById('apiModal').style.display = 'none';
+        }
+
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            
+            if (apiKey && apiKey.startsWith('sk-')) {
+                OPENAI_API_KEY = apiKey;
+                localStorage.setItem('openai_api_key', apiKey);
+                isApiConfigured = true;
+                updateAIStatus('connected', 'Conectado a OpenAI');
+                closeApiConfig();
+                
+                // Mensaje de confirmación
+                setTimeout(() => {
+                    addMessage("¡Perfecto! 🎉 Ahora tengo acceso a IA avanzada. Puedes hacerme preguntas más complejas y recibirás respuestas mucho más personalizadas y profundas. ¿En qué puedo ayudarte?");
+                }, 1000);
+            } else {
+                alert('Por favor ingresa una API key válida de OpenAI (debe empezar con sk-)');
+            }
+        }
+
+        // ============ FUNCIONES DE CHAT ============
+
+        function addMessage(content, isUser = false, isError = false) {
             const messagesContainer = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
@@ -595,10 +951,15 @@
                 minute: '2-digit' 
             });
             
+            const aiBadge = !isUser && isApiConfigured && !isError ? '<span class="ai-badge">IA</span>' : '';
+            const errorClass = isError ? 'class="error-message"' : '';
+            
             messageDiv.innerHTML = `
                 <div class="avatar">${isUser ? '👤' : '🤖'}</div>
                 <div class="message-content">
-                    <p>${content}</p>
+                    <div ${errorClass}>
+                        <p>${content}${aiBadge}</p>
+                    </div>
                     <div class="message-time">${currentTime}</div>
                 </div>
             `;
@@ -616,57 +977,68 @@
             document.getElementById('typingIndicator').style.display = 'none';
         }
 
-        function sendMessage() {
+        async function sendMessage() {
+            if (isProcessing) return;
+            
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
             
             if (message === '') return;
             
-            // Add user message
+            // Validaciones
+            if (message.length < 3) {
+                alert('Por favor escribe una pregunta más específica');
+                return;
+            }
+            
+            isProcessing = true;
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<div class="loading-spinner"></div>';
+            
+            // Agregar mensaje del usuario
             addMessage(message, true);
             input.value = '';
             
-            // Show typing indicator
+            // Mostrar indicador de escritura
             showTyping();
             
-            // Simulate bot response delay
-            setTimeout(() => {
-                hideTyping();
-                
-                // Check for quick responses first
-                const lowerMessage = message.toLowerCase();
+            try {
                 let botResponse;
                 
-                // Check quick responses
-                for (const [key, response] of Object.entries(quickResponses)) {
-                    if (lowerMessage.includes(key)) {
-                        botResponse = response;
-                        break;
-                    }
-                }
-                
-                // If no quick response found, use category-based response
-                if (!botResponse) {
-                    const category = findResponseCategory(message);
-                    botResponse = getRandomResponse(category);
-                }
-                
-                addMessage(botResponse);
-                
-                // Add a follow-up question sometimes
-                if (Math.random() > 0.7) {
+                if (!isApiConfigured) {
+                    // Mensaje pidiendo configuración
+                    botResponse = `Para darte respuestas más inteligentes y personalizadas, necesito que configures tu API key de OpenAI. 
+
+Por ahora puedo ayudarte con sabiduría estoica básica:
+
+${getLocalStoicResponse(message)}
+
+¿Quieres configurar la IA avanzada? Haz clic en "⚙️ Configurar API OpenAI" en la barra lateral.`;
+                    
                     setTimeout(() => {
-                        const followUps = [
-                            "¿Te ayuda esta perspectiva? ¿Hay algo específico que quieras profundizar?",
-                            "¿Cómo te sientes con esta reflexión? ¿Puedes aplicar esto a tu situación?",
-                            "¿Te resuena esta sabiduría antigua? ¿Qué parte te parece más útil?",
-                            "¿Has probado algo similar antes? ¿Qué otros desafíos estás enfrentando?"
-                        ];
-                        const randomFollowUp = followUps[Math.floor(Math.random() * followUps.length)];
-                        addMessage(randomFollowUp);
+                        hideTyping();
+                        addMessage(botResponse);
                     }, 2000);
+                } else {
+                    // Usar OpenAI API
+                    botResponse = await getBotResponse(message);
+                    hideTyping();
+                    addMessage(botResponse);
                 }
-            }, 1500 + Math.random() * 1000);
+                
+            } catch (error) {
+                hideTyping();
+                addMessage(`Lo siento, hay un problema técnico. Mientras tanto, aquí tienes sabiduría estoica:
+
+${getLocalStoicResponse(message)}
+
+*Error: ${error.message}*`, false, true);
+            } finally {
+                isProcessing = false;
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '➤';
+            }
         }
 
         function sendQuickMessage(message) {
@@ -674,16 +1046,39 @@
             sendMessage();
         }
 
-        // Event listeners
+        // ============ EVENT LISTENERS ============
+
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 sendMessage();
             }
         });
 
-        // Add some initial interaction
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('apiModal');
+            if (event.target === modal) {
+                closeApiConfig();
+            }
+        }
+
+        // ============ INICIALIZACIÓN ============
+
+        // Verificar estado inicial de API
+        if (isApiConfigured) {
+            updateAIStatus('connected', 'Conectado a OpenAI');
+        } else {
+            updateAIStatus('error', 'API no configurada');
+        }
+
+        // Mensaje inicial mejorado
         setTimeout(() => {
-            addMessage("Por cierto, veo que es tu primera vez aquí. ¡Fantástico! 🎉 Puedes preguntarme sobre cualquier situación específica que estés viviendo. Los estoicos creían que la filosofía debe ser práctica, no solo teórica.");
+            if (!isApiConfigured) {
+                addMessage("👋 ¡Hola! Para darte la mejor experiencia posible, configura tu API key de OpenAI. Mientras tanto, puedo ayudarte con sabiduría estoica clásica. ¿En qué situación específica necesitas orientación?");
+            } else {
+                addMessage("¡Perfecto! Tengo acceso completo a IA avanzada. Puedes contarme situaciones complejas y te daré consejos estoicos profundos y personalizados. ¿Qué está pasando en tu vida que te preocupa? 🤔");
+            }
         }, 3000);
     </script>
 </body>
