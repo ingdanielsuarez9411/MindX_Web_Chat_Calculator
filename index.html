@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EstoicBot - Tu Mentor Filosófico con IA</title>
+    <title>Hospital Universitario Nacional - Transformación CX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,1074 +15,1136 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f8fffe 0%, #e8f4f8 100%);
+            min-height: 100vh;
         }
-
-        .container {
-            display: flex;
-            height: 100vh;
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 0;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 300px;
-            background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            border-radius: 0;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo h1 {
-            font-size: 24px;
-            background: linear-gradient(45deg, #ffd700, #ff6b35);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
-        }
-
-        .logo p {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
-        .philosophy-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .ai-status {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .ai-status h3 {
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: #4ade80;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            font-size: 12px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
-        }
-
-        .status-connected {
-            background: #4ade80;
-        }
-
-        .status-error {
-            background: #ef4444;
-        }
-
-        .quick-topics {
-            margin-top: 20px;
-        }
-
-        .quick-topics h3 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: #ffd700;
-        }
-
-        .topic-btn {
-            display: block;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .topic-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .api-config {
-            margin-top: auto;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .config-btn {
-            width: 100%;
-            background: rgba(255, 215, 0, 0.2);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            color: #ffd700;
-            padding: 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .config-btn:hover {
-            background: rgba(255, 215, 0, 0.3);
-        }
-
-        .stats {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 12px;
-        }
-
-        /* Modal para configuración */
-        .modal {
-            display: none;
+        
+        /* --- ESTILOS PARA EL ZOOM --- */
+        .zoom-overlay {
             position: fixed;
-            z-index: 1000;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+            padding: 20px;
         }
 
-        .modal-content {
+        .zoom-content {
             background: white;
-            margin: 10% auto;
-            padding: 30px;
             border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .modal h2 {
-            margin-bottom: 20px;
-            color: #2d3748;
-        }
-
-        .modal input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .modal input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .modal-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-save {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-cancel {
-            background: #e2e8f0;
-            color: #2d3748;
-        }
-
-        .close {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        /* Chat Area */
-        .chat-container {
-            flex: 1;
+            padding: 20px;
+            cursor: default;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
             display: flex;
             flex-direction: column;
-            background: white;
+            gap: 15px;
         }
 
-        .chat-header {
-            background: linear-gradient(90deg, #667eea, #764ba2);
+        .zoom-content.chart-zoomed {
+            width: 60vw;
+            height: 60vh;
+            max-width: 1100px;
+            max-height: 800px;
+        }
+
+        .zoomed-chart-container {
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        /* [MODIFICADO] Tamaño del gráfico principal aumentado en un 20% (300px -> 360px) */
+        .chart-container {
+            background: white; 
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            max-width: 600px; /* Aumentado de 300px a 360px */
+            margin-left: auto;
+            margin-right: auto;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+        
+        /* --- El resto de tus estilos originales (intactos) --- */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 20px;
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .hospital-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-image {
+            width: 260px;
+            height: 70px;
+            border-radius: 2px;
+            object-fit: cover;
+            background: white;
+            padding: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .hospital-info h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .hospital-info p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .provider-space {
+            width: 120px;
+            height: 60px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .provider-logo {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .title-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title-section h2 {
+            font-size: 32px;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .title-section p {
+            font-size: 18px;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .tab {
+            padding: 20px 30px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            flex: 1;
             text-align: center;
             position: relative;
         }
-
-        .chat-header h2 {
-            font-size: 20px;
-            margin-bottom: 5px;
+        .tab.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
         }
-
-        .chat-header .status {
-            font-size: 12px;
-            opacity: 0.9;
+        .tab:hover:not(.active) {
+            background: #f0f8ff;
+            color: #1e3c72;
         }
-
-        .online-indicator {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 12px;
-            height: 12px;
-            background: #4ade80;
-            border-radius: 50%;
-            border: 2px solid white;
-            animation: pulse 2s infinite;
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
         }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        .tab-content.active {
+            display: block;
         }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
-        }
-
-        .message {
-            margin-bottom: 20px;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
+        @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .message.bot {
-            display: flex;
-            align-items: flex-start;
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: center;
         }
-
-        .message.user {
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-end;
+        .to-do-section, .to-be-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
         }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin: 0 10px;
+        .to-do-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+        .to-be-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .to-do-section .section-title {
+            color: #ff6b6b;
+        }
+        .to-be-section .section-title {
+            color: #4ecdc4;
+        }
+        .arrow-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .arrow {
+            font-size: 48px;
+            color: #1e3c72;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: #f8fffe;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #e1f5fe;
+            transition: transform 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .metric-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #1e3c72;
+        }
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .to-do-section .metric-value {
+            color: #ff6b6b;
+        }
+        .to-be-section .metric-value {
+            color: #4ecdc4;
+        }
+        .metric-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        .chart-title {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .benefit-card {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #4ecdc4;
+        }
+        .benefit-icon {
+            font-size: 30px;
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+        .benefit-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+        .benefit-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .channel-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .bot .avatar {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .user .avatar {
-            background: linear-gradient(45deg, #ffd700, #ff6b35);
-            color: white;
-        }
-
-        .message-content {
-            max-width: 70%;
-            padding: 15px 20px;
-            border-radius: 20px;
-            position: relative;
-        }
-
-        .bot .message-content {
-            background: white;
-            color: #2d3748;
-            border-bottom-left-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .user .message-content {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-
-        .message-time {
-            font-size: 10px;
-            opacity: 0.6;
-            margin-top: 5px;
-        }
-
-        .ai-badge {
-            background: linear-gradient(45deg, #4ade80, #22c55e);
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
+            gap: 15px;
+            padding: 15px;
+            background: #f8fffe;
             border-radius: 10px;
-            margin-left: 8px;
+            border: 2px solid #e1f5fe;
         }
-
-        .error-message {
-            background: #fee2e2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
+        .channel-icon {
+            font-size: 24px;
+            color: #1e3c72;
+            width: 40px;
+            text-align: center;
+        }
+        .channel-info {
+            flex: 1;
+        }
+        .channel-name {
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        .channel-percentage {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6b6b;
+        }
+        .satisfaction-bars {
+            margin: 20px 0;
+        }
+        .satisfaction-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .satisfaction-label {
+            width: 100px;
+            font-weight: 500;
+            color: #666;
+        }
+        .satisfaction-bar {
+            flex: 1;
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            margin: 0 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        .satisfaction-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
             font-size: 12px;
         }
-
-        .typing-indicator {
-            display: none;
+        .satisfaction-value {
+            font-weight: 600;
+            color: #1e3c72;
+            width: 40px;
+        }
+        .improvement-badge {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-align: center;
+            margin: 20px auto;
+            display: inline-block;
+        }
+        .kpi-summary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .kpi-summary h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .kpi-summary p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: linear-gradient(180deg, #1e3c72 0%, #4ecdc4 100%);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            border-radius: 2px;
+        }
+        .timeline-item {
+            padding: 20px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background: white;
+            border: 4px solid #1e3c72;
+            top: 30px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        .timeline-content {
+            padding: 20px 30px;
+            background: white;
+            position: relative;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #4ecdc4;
+        }
+        .timeline-date {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .timeline-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+        .timeline-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .kpi-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .kpi-metric {
+            background: #f8fffe;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e1f5fe;
+        }
+        .kpi-metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4ecdc4;
+            margin-bottom: 5px;
+        }
+        .kpi-metric-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+        .reporting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .reporting-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-top: 4px solid #4ecdc4;
+        }
+        .reporting-header {
+            display: flex;
             align-items: center;
+            gap: 15px;
             margin-bottom: 20px;
         }
-
-        .typing-dots {
-            display: flex;
-            margin-left: 60px;
-        }
-
-        .typing-dots span {
-            width: 8px;
-            height: 8px;
-            background: #cbd5e0;
+        .reporting-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
             border-radius: 50%;
-            margin: 0 2px;
-            animation: typing 1.5s infinite;
-        }
-
-        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
-        }
-
-        .chat-input {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .input-container {
-            display: flex;
-            align-items: center;
-            background: #f7fafc;
-            border-radius: 25px;
-            padding: 5px;
-            border: 2px solid #e2e8f0;
-            transition: border-color 0.3s ease;
-        }
-
-        .input-container:focus-within {
-            border-color: #667eea;
-        }
-
-        .chat-input input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 15px 20px;
-            font-size: 16px;
-            outline: none;
-        }
-
-        .send-btn {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s ease;
+            color: white;
+            font-size: 20px;
         }
-
-        .send-btn:hover {
-            transform: scale(1.1);
+        .reporting-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e3c72;
         }
-
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .reporting-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
         }
-
-        .suggestions {
-            display: flex;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin-top: 15px;
-            overflow-x: auto;
-            padding-bottom: 5px;
         }
-
-        .suggestion-chip {
-            background: linear-gradient(45deg, #e2e8f0, #cbd5e0);
-            border: none;
+        .stat-item {
+            background: #f8fffe;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+        }
+        .dashboard-mockup {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin: 30px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e1f5fe;
+        }
+        .dashboard-mockup:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1f5fe;
+        }
+        .dashboard-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        .dashboard-subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .dashboard-widget {
+            background: #f8fffe;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #4ecdc4;
+        }
+        .widget-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        .widget-label {
+            font-size: 11px;
+            color: #666;
+        }
+        .widget-trend {
+            font-size: 10px;
+            color: #4ecdc4;
+            margin-top: 5px;
+        }
+        .chart-mini {
+            height: 60px;
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+            border-radius: 8px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+        }
+        .roi-table {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+        .roi-table h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 22px;
+        }
+        .roi-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .roi-comparison th,
+        .roi-comparison td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1f5fe;
+        }
+        .roi-comparison th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+        .roi-comparison td:first-child {
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        .roi-comparison .highlight {
+            background: #e8f8f5;
+            font-weight: 700;
+            color: #4ecdc4;
+        }
+        .roi-comparison .savings {
+            background: #fff3cd;
+            font-weight: 700;
+            color: #856404;
+        }
+        .roi-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .roi-benefit {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #4ecdc4;
+        }
+        .roi-benefit-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .roi-benefit-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .five9-badge {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 12px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
         }
 
-        .suggestion-chip:hover {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
-                border-radius: 0;
+            .timeline::after {
+                left: 20px;
             }
-            
-            .sidebar {
-                display: none;
+            .timeline-item {
+                width: 100%;
+                padding-left: 50px;
+                padding-right: 20px;
             }
-            
-            .chat-header {
-                padding: 15px;
+            .timeline-item::after {
+                left: 10px;
             }
-            
-            .chat-messages {
-                padding: 15px;
+            .timeline-item:nth-child(even) {
+                left: 0;
             }
-            
-            .message-content {
-                max-width: 85%;
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
-            
-            .chat-input {
-                padding: 15px;
+            .arrow-container {
+                transform: rotate(90deg);
             }
-            
-            .suggestions {
+            .tabs {
                 flex-direction: column;
-                gap: 8px;
             }
-            
-            .suggestion-chip {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
                 text-align: center;
             }
-
-            .modal-content {
-                margin: 20% auto;
-                width: 95%;
-                padding: 20px;
+            .zoom-content.chart-zoomed {
+                width: 95vw;
+                height: 50vh;
             }
-        }
-
-        /* Welcome message special styling */
-        .welcome-message {
-            text-align: center;
-            background: linear-gradient(45deg, #ffd700, #ff6b35);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-left: 8px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <div class="philosophy-icon">🏛️</div>
-                <h1>EstoicBot</h1>
-                <p>Mentor filosófico con IA avanzada</p>
+    <header class="header">
+        <div class="header-content">
+            <div class="hospital-logo">
+                <img src="logo_HUN.jpg" alt="Hospital Universitario Nacional" class="logo-image">
             </div>
-
-            <div class="ai-status">
-                <h3>🤖 Estado de la IA</h3>
-                <div class="status-indicator">
-                    <div class="status-dot status-connected" id="aiStatusDot"></div>
-                    <span id="aiStatusText">Conectado a OpenAI</span>
-                </div>
-            </div>
-            
-            <div class="quick-topics">
-                <h3>Temas Populares</h3>
-                <button class="topic-btn" onclick="sendQuickMessage('¿Cómo manejar el estrés laboral cuando todo parece fuera de control?')">
-                    😰 Manejo del estrés
-                </button>
-                <button class="topic-btn" onclick="sendQuickMessage('Tengo mucha ansiedad por mi futuro')">
-                    💭 Control de ansiedad
-                </button>
-                <button class="topic-btn" onclick="sendQuickMessage('Mi jefe es muy tóxico, ¿cómo lidiar con esto?')">
-                    💼 Conflictos laborales
-                </button>
-                <button class="topic-btn" onclick="sendQuickMessage('Terminé con mi pareja y me siento devastado')">
-                    💔 Relaciones difíciles
-                </button>
-                <button class="topic-btn" onclick="sendQuickMessage('No logro ser disciplinado con mis hábitos')">
-                    🎯 Disciplina y hábitos
-                </button>
-                <button class="topic-btn" onclick="sendQuickMessage('Me siento perdido, no sé qué hacer con mi vida')">
-                    🌟 Propósito de vida
-                </button>
-            </div>
-
-            <div class="api-config">
-                <button class="config-btn" onclick="openApiConfig()">
-                    ⚙️ Configurar API OpenAI
-                </button>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <span>Consultas IA hoy:</span>
-                    <span id="aiQueries">47</span>
-                </div>
-                <div class="stat-item">
-                    <span>Usuarios activos:</span>
-                    <span>1,892</span>
-                </div>
-                <div class="stat-item">
-                    <span>Satisfacción:</span>
-                    <span>97%</span>
-                </div>
+            <div class="provider-space">
+                <img src="Logo_AXD.png" alt="AXD" class="provider-logo">
             </div>
         </div>
+    </header>
 
-        <!-- Chat Container -->
-        <div class="chat-container">
-            <div class="chat-header">
-                <h2>EstoicBot AI - Sabiduría Estoica Potenciada por IA</h2>
-                <p class="status">Conectado • Respuestas inteligentes en tiempo real</p>
-                <div class="online-indicator"></div>
-            </div>
+    <div class="container">
+        <div class="title-section">
+            <h2>Transformación de Customer Experience</h2>
+            <p>Evolución hacia una plataforma omnicanal inteligente para el agendamiento de citas médicas</p>
+        </div>
 
-            <div class="chat-messages" id="chatMessages">
-                <div class="welcome-message">
-                    <h3>🏛️ ¡Bienvenido a EstoicBot AI!</h3>
-                    <p>Soy tu mentor filosófico personal potenciado por Inteligencia Artificial, entrenado con la sabiduría de Marco Aurelio, Epicteto, Séneca y filosofía estoica moderna.</p>
-                    <p><strong>Cuéntame tu situación específica y te daré consejos personalizados</strong></p>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('kpi1', this)"><i class="fas fa-robot"></i> KPI 1: Autoatención</button>
+            <button class="tab" onclick="showTab('kpi2', this)"><i class="fas fa-calendar-check"></i> KPI 2: Inasistencia</button>
+            <button class="tab" onclick="showTab('kpi3', this)"><i class="fas fa-smile"></i> KPI 3: Satisfacción</button>
+            <button class="tab" onclick="showTab('kpi4', this)"><i class="fas fa-chart-line"></i> Nuevos KPIs</button>
+        </div>
+
+        <div id="kpi1" class="tab-content active">
+            <div class="comparison-grid">
+                <div class="to-do-section">
+                    <div class="section-header">
+                        <h3 class="section-title">TO DO - Situación Actual</h3>
+                        <p>Distribución de canales de agendamiento tradicional</p>
+                    </div>
+                    
+                    <div class="channels-grid">
+                        <div class="channel-item"><div class="channel-icon"><i class="fas fa-user"></i></div><div class="channel-info"><div class="channel-name">Presencial</div><div class="channel-percentage">55%</div></div></div>
+                        <div class="channel-item"><div class="channel-icon"><i class="fab fa-whatsapp"></i></div><div class="channel-info"><div class="channel-name">WhatsApp</div><div class="channel-percentage">21%</div></div></div>
+                        <div class="channel-item"><div class="channel-icon"><i class="fas fa-globe"></i></div><div class="channel-info"><div class="channel-name">Página Web</div><div class="channel-percentage">16%</div></div></div>
+                        <div class="channel-item"><div class="channel-icon"><i class="fas fa-phone"></i></div><div class="channel-info"><div class="channel-name">PBX</div><div class="channel-percentage">8%</div></div></div>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-clock"></i></div><div class="metric-value">Alto</div><div class="metric-label">Tiempo de Espera</div></div>
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-users"></i></div><div class="metric-value">Manual</div><div class="metric-label">Proceso de Atención</div></div>
+                    </div>
                 </div>
-                
-                <div class="message bot">
-                    <div class="avatar">🤖</div>
-                    <div class="message-content">
-                        <p>¡Hola! Soy EstoicBot AI, tu asistente filosófico inteligente. <span class="ai-badge">IA</span></p>
-                        <br>
-                        <p>A diferencia de chatbots básicos, puedo entender el contexto completo de tu situación y darte consejos estoicos personalizados para:</p>
-                        <br>
-                        <p>• Situaciones específicas de estrés y ansiedad 😰<br>
-                        • Conflictos interpersonales complejos 💕<br>
-                        • Decisiones difíciles en el trabajo 💼<br>
-                        • Desarrollo de disciplina personal 🎯<br>
-                        • Búsqueda de propósito y significado 🌟</p>
-                        <br>
-                        <p><strong>Describe tu situación con todo el detalle que quieras. Mientras más contexto me des, mejor te podré ayudar.</strong></p>
-                        <div class="message-time">Hace unos segundos</div>
+
+                <div class="arrow-container"><i class="fas fa-arrow-right arrow"></i></div>
+
+                <div class="to-be-section">
+                    <div class="section-header"><h3 class="section-title">TO BE - Solución Omnicanal</h3><p>Autoatención inteligente con IVA y Bot WhatsApp</p></div>
+                    
+                    <div class="channels-grid">
+                        <div class="channel-item"><div class="channel-icon"><i class="fas fa-user"></i></div><div class="channel-info"><div class="channel-name">Presencial</div><div class="channel-percentage" style="color:#4ecdc4;">40%</div></div></div>
+                        <div class="channel-item"><div class="channel-icon"><i class="fas fa-microphone"></i></div><div class="channel-info"><div class="channel-name">IVA (Voz)</div><div class="channel-percentage" style="color:#4ecdc4;">25%</div></div></div>
+                        <div class="channel-item"><div class="channel-icon"><i class="fas fa-robot"></i></div><div class="channel-info"><div class="channel-name">Bot WhatsApp</div><div class="channel-percentage" style="color:#4ecdc4;">20%</div></div></div>
+                        <div class="channel-item"><div class="channel-icon"><i class="fas fa-bullhorn"></i></div><div class="channel-info"><div class="channel-name">Campañas Outbound</div><div class="channel-percentage" style="color:#4ecdc4;">10%</div></div></div>
+                        <div class="channel-item"><div class="channel-icon"><i class="fas fa-headset"></i></div><div class="channel-info"><div class="channel-name">Agente Humano</div><div class="channel-percentage" style="color:#4ecdc4;">5%</div></div></div>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-bolt"></i></div><div class="metric-value">60%</div><div class="metric-label">Automatización</div></div>
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-clock"></i></div><div class="metric-value">24/7</div><div class="metric-label">Disponibilidad</div></div>
                     </div>
                 </div>
             </div>
 
-            <div class="typing-indicator" id="typingIndicator">
-                <div class="avatar">🤖</div>
-                <div class="typing-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+            <div class="chart-container" onclick="zoomChart(this)">
+                <h3 class="chart-title">Adopción de Canales Digitales vs Presencialidad</h3>
+                <canvas id="automationChart"></canvas>
+            </div>
+
+            <div class="kpi-summary">
+                <h3>Objetivo de Autoatención</h3>
+                <p>Alcanzar un 60% de autoatención a través de canales digitales inteligentes, manteniendo el 40% del canal presencial pero optimizando la experiencia del paciente con respuestas instantáneas y disponibilidad 24/7 en los canales digitales.</p>
+            </div>
+        </div>
+
+        <div id="kpi2" class="tab-content">
+            <div class="comparison-grid">
+                <div class="to-do-section">
+                    <div class="section-header"><h3 class="section-title">TO DO - Situación Actual</h3><p>Altos índices de inasistencia sin recordatorios efectivos</p></div>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-calendar-times"></i></div><div class="metric-value">12%</div><div class="metric-label">Inasistencia 2024</div></div>
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="metric-value">17%</div><div class="metric-label">Pico Máximo 2023</div></div>
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-bell-slash"></i></div><div class="metric-value">Notificación Multicanal</div><div class="metric-label">Recordatorios</div></div>
+                    </div>
+                </div>
+
+                <div class="arrow-container"><i class="fas fa-arrow-right arrow"></i></div>
+
+                <div class="to-be-section">
+                    <div class="section-header"><h3 class="section-title">TO BE - Recordatorios Inteligentes</h3><p>Sistema automatizado de recordatorios multicanal</p></div>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-target"></i></div><div class="metric-value">&lt;10%</div><div class="metric-label">Objetivo Inasistencia</div></div>
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-phone"></i></div><div class="metric-value">Voz</div><div class="metric-label">Llamadas Automáticas</div></div>
+                        <div class="metric-card"><div class="metric-icon"><i class="fab fa-whatsapp"></i></div><div class="metric-value">WhatsApp</div><div class="metric-label">Mensajes</div></div>
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-bullhorn"></i></div><div class="metric-value">Campañas</div><div class="metric-label">Outbound</div></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="chat-input">
-                <div class="input-container">
-                    <input 
-                        type="text" 
-                        id="messageInput" 
-                        placeholder="Describe tu situación específica..."
-                        maxlength="2000"
-                    >
-                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                        ➤
-                    </button>
+            <div class="chart-container" onclick="zoomChart(this)">
+                <h3 class="chart-title">Evolución del % de Inasistencia</h3>
+                <canvas id="inasistenciaChart"></canvas>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card"><div class="benefit-icon"><i class="fas fa-bell"></i></div><div class="benefit-title">Recordatorios Automáticos</div><div class="benefit-description">Sistema que envía recordatorios 48h, 24h y 2h antes de la cita por múltiples canales</div></div>
+                <div class="benefit-card"><div class="benefit-icon"><i class="fas fa-chart-line"></i></div><div class="benefit-title">Mayor Contactabilidad</div><div class="benefit-description">Incremento del 85% en contactabilidad efectiva con pacientes</div></div>
+                <div class="benefit-card"><div class="benefit-icon"><i class="fas fa-calendar-check"></i></div><div class="benefit-title">Confirmación de Citas</div><div class="benefit-description">Los pacientes pueden confirmar o reprogramar directamente desde el recordatorio</div></div>
+            </div>
+
+            <div class="improvement-badge"><i class="fas fa-arrow-down"></i> Reducción proyectada: 20% menos inasistencias</div>
+
+            <div class="kpi-summary">
+                <h3>Meta: Inasistencia < 10%</h3>
+                <p>Implementar un sistema de recordatorios multicanal automatizado que permita reducir la inasistencia desde el 12% actual hasta menos del 10%, optimizando el uso de la agenda médica y mejorando el acceso a los servicios de salud.</p>
+            </div>
+        </div>
+
+        <div id="kpi3" class="tab-content">
+            <div class="comparison-grid">
+                <div class="to-do-section">
+                    <div class="section-header"><h3 class="section-title">TO DO - Situación Actual</h3><p>¿Qué tan fácil fue solicitar su cita médica?</p></div>
+                    
+                    <div class="satisfaction-bars">
+                        <div class="satisfaction-item"><div class="satisfaction-label">Muy Fácil</div><div class="satisfaction-bar"><div class="satisfaction-fill" style="width: 11%; background: #4ecdc4;">11%</div></div><div class="satisfaction-value">11%</div></div>
+                        <div class="satisfaction-item"><div class="satisfaction-label">Fácil</div><div class="satisfaction-bar"><div class="satisfaction-fill" style="width: 32%; background: #45b7aa;">32%</div></div><div class="satisfaction-value">32%</div></div>
+                        <div class="satisfaction-item"><div class="satisfaction-label">Difícil</div><div class="satisfaction-bar"><div class="satisfaction-fill" style="width: 30%; background: #ff8a65;">30%</div></div><div class="satisfaction-value">30%</div></div>
+                        <div class="satisfaction-item"><div class="satisfaction-label">Muy Difícil</div><div class="satisfaction-bar"><div class="satisfaction-fill" style="width: 27%; background: #ff6b6b;">27%</div></div><div class="satisfaction-value">27%</div></div>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-frown"></i></div><div class="metric-value">57%</div><div class="metric-label">Experiencia Negativa</div></div>
+                    </div>
                 </div>
-                
-                <div class="suggestions">
-                    <button class="suggestion-chip" onclick="sendQuickMessage('Mi jefe me critica constantemente y afecta mi autoestima')">
-                        😡 Jefe tóxico
-                    </button>
-                    <button class="suggestion-chip" onclick="sendQuickMessage('Tengo miedo de fracasar en mi nuevo emprendimiento')">
-                        😨 Miedo al fracaso
-                    </button>
-                    <button class="suggestion-chip" onclick="sendQuickMessage('Procrastino mucho con mis estudios')">
-                        ⏰ Procrastinación
-                    </button>
-                    <button class="suggestion-chip" onclick="sendQuickMessage('Las redes sociales me hacen sentir inferior')">
-                        📱 Comparación social
-                    </button>
+
+                <div class="arrow-container"><i class="fas fa-arrow-right arrow"></i></div>
+
+                <div class="to-be-section">
+                    <div class="section-header"><h3 class="section-title">TO BE - Experiencia Optimizada</h3><p>Agendamiento ágil con listas de espera inteligentes</p></div>
+                    
+                    <div class="satisfaction-bars">
+                        <div class="satisfaction-item"><div class="satisfaction-label">Muy Fácil</div><div class="satisfaction-bar"><div class="satisfaction-fill" style="width: 45%; background: #4ecdc4;">45%</div></div><div class="satisfaction-value">45%</div></div>
+                        <div class="satisfaction-item"><div class="satisfaction-label">Fácil</div><div class="satisfaction-bar"><div class="satisfaction-fill" style="width: 40%; background: #45b7aa;">40%</div></div><div class="satisfaction-value">40%</div></div>
+                        <div class="satisfaction-item"><div class="satisfaction-label">Difícil</div><div class="satisfaction-bar"><div class="satisfaction-fill" style="width: 10%; background: #ff8a65;">10%</div></div><div class="satisfaction-value">10%</div></div>
+                        <div class="satisfaction-item"><div class="satisfaction-label">Muy Difícil</div><div class="satisfaction-bar"><div class="satisfaction-fill" style="width: 5%; background: #ff6b6b;">5%</div></div><div class="satisfaction-value">5%</div></div>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card"><div class="metric-icon"><i class="fas fa-smile"></i></div><div class="metric-value">85%</div><div class="metric-label">Experiencia Positiva</div></div>
+                    </div>
                 </div>
+            </div>
+
+            <div class="chart-container" onclick="zoomChart(this)">
+                <h3 class="chart-title">Mejora en Satisfacción del Paciente</h3>
+                <canvas id="satisfaccionChart"></canvas>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card"><div class="benefit-icon"><i class="fas fa-list"></i></div><div class="benefit-title">Listas de Espera Inteligentes</div><div class="benefit-description">Notificación proactiva cuando se libera un cupo de agenda disponible</div></div>
+                <div class="benefit-card"><div class="benefit-icon"><i class="fas fa-mobile-alt"></i></div><div class="benefit-title">Agendamiento Inmediato</div><div class="benefit-description">Solicitud de citas en menos de 2 minutos desde cualquier dispositivo</div></div>
+                <div class="benefit-card"><div class="benefit-icon"><i class="fas fa-sync"></i></div><div class="benefit-title">Gestión Ágil</div><div class="benefit-description">Reprogramación y cancelación automática con opciones alternativas</div></div>
+            </div>
+
+            <div class="improvement-badge"><i class="fas fa-arrow-up"></i> Incremento del 97% en satisfacción positiva</div>
+
+            <div class="kpi-summary">
+                <h3>Objetivo: 85% Experiencia Positiva</h3>
+                <p>Transformar la experiencia de agendamiento para que el 85% de los pacientes consideren el proceso como fácil o muy fácil, implementando listas de espera inteligentes y notificaciones proactivas para optimizar el acceso a los servicios médicos.</p>
+            </div>
+        </div>
+
+        <div id="kpi4" class="tab-content">
+            <div class="title-section">
+                <h2 style="font-size: 28px; margin-bottom: 20px;">Nuevos KPIs de Medición</h2>
+                <p style="font-size: 16px;">Indicadores avanzados disponibles a partir de los 3 meses de implementación</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item"><div class="timeline-content"><div class="timeline-date">Mes 1-2: Implementación</div><div class="timeline-title">Fase de Despliegue</div><div class="timeline-description">Configuración de la plataforma omnicanal y capacitación del personal</div></div></div>
+                <div class="timeline-item"><div class="timeline-content"><div class="timeline-date">Mes 3+: Medición Activa</div><div class="timeline-title">KPIs Operacionales Disponibles</div><div class="timeline-description">Inicio de recopilación y análisis de métricas avanzadas</div><div class="kpi-metrics"><div class="kpi-metric"><div class="kpi-metric-value">-85%</div><div class="kpi-metric-label">Reducción de Tiempo</div></div><div class="kpi-metric"><div class="kpi-metric-value">10x</div><div class="kpi-metric-label">Incremento Capacidad</div></div><div class="kpi-metric"><div class="kpi-metric-value">-60%</div><div class="kpi-metric-label">Reducción Costos</div></div></div></div></div>
+                <div class="timeline-item"><div class="timeline-content"><div class="timeline-date">Mes 6+: Optimización</div><div class="timeline-title">Análisis Predictivo</div><div class="timeline-description">Implementación de modelos predictivos y optimización basada en datos históricos</div></div></div>
+            </div>
+
+            <div class="reporting-grid">
+                <div class="reporting-card"><div class="reporting-header"><div class="reporting-icon"><i class="fas fa-chart-bar"></i></div><div class="reporting-title">Reportería y Estadísticas</div></div><div class="reporting-description">Dashboard en tiempo real con métricas clave de rendimiento y análisis de tendencias de agendamiento.</div><div class="stats-grid"><div class="stat-item"><div class="stat-value">98.5%</div><div class="stat-label">Disponibilidad</div></div><div class="stat-item"><div class="stat-value">2.3 min</div><div class="stat-label">Tiempo Promedio</div></div><div class="stat-item"><div class="stat-value">95%</div><div class="stat-label">Resolución Primer Contacto</div></div><div class="stat-item"><div class="stat-value">24/7</div><div class="stat-label">Operación</div></div></div></div>
+                <div class="reporting-card"><div class="reporting-header"><div class="reporting-icon"><i class="fas fa-list-ul"></i></div><div class="reporting-title">Gestión Lista de Espera</div></div><div class="reporting-description">Control inteligente de listas de espera con notificaciones automáticas y gestión de prioridades.</div><div class="stats-grid"><div class="stat-item"><div class="stat-value">1,247</div><div class="stat-label">Pacientes en Lista</div></div><div class="stat-item"><div class="stat-value">4.2 días</div><div class="stat-label">Tiempo Promedio Espera</div></div><div class="stat-item"><div class="stat-value">89%</div><div class="stat-label">Contactabilidad</div></div><div class="stat-item"><div class="stat-value">76%</div><div class="stat-label">Conversión a Cita</div></div></div></div>
+                <div class="reporting-card"><div class="reporting-header"><div class="reporting-icon"><i class="fas fa-chart-pie"></i></div><div class="reporting-title">Volumetrías Centro</div></div><div class="reporting-description">Análisis de volúmenes de agendamiento por canal, especialidad y franjas horarias.</div><div class="stats-grid"><div class="stat-item"><div class="stat-value">3,456</div><div class="stat-label">Citas/Mes</div></div><div class="stat-item"><div class="stat-value">142</div><div class="stat-label">Citas/Día</div></div><div class="stat-item"><div class="stat-value">18</div><div class="stat-label">Citas/Hora Pico</div></div><div class="stat-item"><div class="stat-value">23</div><div class="stat-label">Especialidades</div></div></div></div>
+            </div>
+
+            <div class="dashboard-mockup" onclick="zoomDashboard()">
+                <div class="dashboard-header"><div><div class="dashboard-title">Dashboard de Reportería en Tiempo Real</div><div class="dashboard-subtitle">Última actualización: Tiempo real - Click para ampliar</div></div></div>
+                <div class="dashboard-grid">
+                    <div class="dashboard-widget"><div class="widget-value">1,247</div><div class="widget-label">Citas Hoy</div><div class="widget-trend">↗ +15%</div></div>
+                    <div class="dashboard-widget"><div class="widget-value">98.5%</div><div class="widget-label">Disponibilidad</div><div class="widget-trend">↗ +2.1%</div></div>
+                    <div class="dashboard-widget"><div class="widget-value">2.3min</div><div class="widget-label">Tiempo Promedio</div><div class="widget-trend">↓ -1.2min</div></div>
+                    <div class="dashboard-widget"><div class="widget-value">89%</div><div class="widget-label">Satisfacción</div><div class="widget-trend">↗ +5%</div></div>
+                </div>
+                <div class="chart-mini">📊 Gráfico de Tendencias en Tiempo Real</div>
+            </div>
+
+            <div class="roi-table">
+                <div class="five9-badge">Powered by Five9 IVA Technology</div>
+                <h3>Análisis de ROI: Agentes Virtuales vs Agentes Humanos</h3>
+                <table class="roi-comparison">
+                    <thead><tr><th>Concepto</th><th>Agentes Virtuales Inteligentes (5)</th><th>Agentes Humanos (5)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Costo Mensual por Unidad</td><td class="highlight">325 USD</td><td>2.204.760 COP</td></tr>
+                        <tr><td>Costo Total Mensual</td><td class="highlight">1.625 USD (325 × 5)</td><td>11.023.800 COP (2.204.760 × 5)</td></tr>
+                        <tr><td>Costo Anual</td><td class="highlight">19.500 USD</td><td>132.285.600 COP</td></tr>
+                        <tr><td>Costo a 3 años</td><td class="highlight">58.500 USD</td><td>396.856.800 COP</td></tr>
+                        <tr><td>Eficiencia en Agendamiento</td><td class="highlight">3x más eficiente*</td><td>Referencia estándar</td></tr>
+                        <tr><td>Citas Agendadas por Día</td><td class="highlight">150 citas</td><td>50 citas</td></tr>
+                        <tr><td>Citas Agendadas por Mes</td><td class="highlight">3.300 citas</td><td>1.100 citas</td></tr>
+                        <tr><td>Citas Agendadas por Año</td><td class="highlight">39.600 citas</td><td>13.200 citas</td></tr>
+                        <tr><td>Citas Agendadas en 3 Años</td><td class="highlight">118.800 citas</td><td>39.600 citas</td></tr>
+                        <tr><td>Costo por Cita (Año 1)</td><td class="highlight">0,49 USD por cita</td><td>10,02 USD por cita</td></tr>
+                        <tr><td>Costo por Cita (3 Años)</td><td class="highlight">0,49 USD por cita</td><td>10,02 USD por cita</td></tr>
+                        <tr class="savings"><td><strong>Ahorro Anual</strong></td><td><strong>112.785.600 COP</strong></td><td>0 COP (no hay ahorro)</td></tr>
+                        <tr class="savings"><td><strong>Ahorro a 3 Años</strong></td><td><strong>338.356.800 COP</strong></td><td>0 COP</td></tr>
+                    </tbody>
+                </table>
+                <div class="roi-benefits">
+                    <div class="roi-benefit"><div class="roi-benefit-title"><i class="fas fa-dollar-sign"></i>Ahorro Económico Significativo</div><div class="roi-benefit-description">Los IVAs de Five9 generan un ahorro anual de <strong>$112.785.600 COP</strong>, representando una reducción del <strong>85% en costos operativos</strong> comparado con agentes humanos.</div></div>
+                    <div class="roi-benefit"><div class="roi-benefit-title"><i class="fas fa-rocket"></i>Eficiencia Operacional 3x Superior</div><div class="roi-benefit-description">Cada IVA de Five9 puede agendar <strong>150 citas diarias</strong> vs 50 de un agente humano, triplicando la capacidad de atención sin aumentar costos.</div></div>
+                    <div class="roi-benefit"><div class="roi-benefit-title"><i class="fas fa-clock"></i>Disponibilidad 24/7</div><div class="roi-benefit-description">Los IVAs de Five9 operan sin interrupciones, eliminando costos de turnos nocturnos, festivos y licencias, maximizando el ROI del Hospital.</div></div>
+                    <div class="roi-benefit"><div class="roi-benefit-title"><i class="fas fa-chart-line"></i>Escalabilidad Sin Límites</div><div class="roi-benefit-description">La tecnología Five9 permite escalar la capacidad instantáneamente sin costos adicionales de contratación, entrenamiento o infraestructura física.</div></div>
+                </div>
+            </div>
+
+            <div class="kpi-summary">
+                <h3>Ventajas de la Medición Avanzada</h3>
+                <p>La plataforma omnicanal permite obtener insights detallados sobre el comportamiento de agendamiento, optimizar recursos, predecir demandas futuras y mejorar continuamente la experiencia del paciente a través de análisis de datos en tiempo real.</p>
             </div>
         </div>
     </div>
 
-    <!-- Modal de configuración API -->
-    <div id="apiModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeApiConfig()">&times;</span>
-            <h2>🔑 Configuración OpenAI API</h2>
-            <p style="margin-bottom: 20px; color: #666; font-size: 14px;">
-                Para usar la IA avanzada, necesitas una API key de OpenAI. 
-                <a href="https://platform.openai.com/api-keys" target="_blank" style="color: #667eea;">Obtén la tuya aquí</a>
-            </p>
-            <input 
-                type="password" 
-                id="apiKeyInput" 
-                placeholder="sk-..." 
-                style="font-family: monospace;"
-            >
-            <p style="font-size: 12px; color: #999; margin-bottom: 20px;">
-                Tu API key se guarda localmente y nunca se envía a terceros.
-            </p>
-            <div class="modal-buttons">
-                <button class="modal-btn btn-cancel" onclick="closeApiConfig()">Cancelar</button>
-                <button class="modal-btn btn-save" onclick="saveApiKey()">Guardar</button>
-            </div>
+    <div id="zoomOverlay" class="zoom-overlay" onclick="closeZoom()">
+        <div class="zoom-content" id="zoomContent" onclick="event.stopPropagation()">
         </div>
     </div>
 
     <script>
-        // ============ CONFIGURACIÓN DE OPENAI API ============
+        // --- LÓGICA JAVASCRIPT (SIN CAMBIOS, SIGUE SIENDO VÁLIDA) ---
+        let zoomedChartInstance = null;
         
-        // 🔑 AQUÍ CONFIGURAS TU API KEY DE OPENAI
-        let OPENAI_API_KEY = localStorage.getItem('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') || '';
-        
-        // 🚀 AQUÍ PUEDES CAMBIAR EL MODELO DE OPENAI
-        const OPENAI_MODEL = 'gpt-4o-mini'; // Más económico: gpt-3.5-turbo, Más potente: gpt-4
-        
-        // 📊 CONFIGURACIÓN DE LA API
-        const OPENAI_CONFIG = {
-            apiUrl: 'https://api.openai.com/v1/chat/completions',
-            maxTokens: 1000,
-            temperature: 0.7,
-            systemPrompt: `Eres EstoicBot, un mentor filosófico especializado en estoicismo moderno para jóvenes latinos. 
-
-PERSONALIDAD:
-- Eres sabio pero accesible, como un hermano mayor filosófico
-- Usas lenguaje contemporáneo sin perder profundidad
-- Incluyes emojis ocasionales para conectar con público joven
-- Eres empático pero directo, no endulzas la realidad
-
-CONOCIMIENTO:
-- Dominas perfectamente a Marco Aurelio, Epicteto, Séneca y estoicismo moderno
-- Entiendes el contexto colombiano/latino: trabajo, familia, educación, relaciones
-- Adaptas la filosofía antigua a problemas modernos: redes sociales, ansiedad, carrera
-
-ESTILO DE RESPUESTA:
-- Máximo 150 palabras por respuesta
-- Siempre incluye una cita estoica relevante
-- Da consejos prácticos y específicos
-- Haz preguntas que inviten a la reflexión
-- Usa analogías modernas que los jóvenes entiendan
-
-ESTRUCTURA:
-1. Reconoce y valida el sentimiento
-2. Perspectiva estoica aplicable
-3. Cita relevante de filósofo estoico
-4. Consejo práctico específico
-5. Pregunta reflexiva para continuar
-
-Ejemplo: "Entiendo que te sientes abrumado 😔 Los estoicos enseñan que el estrés viene de querer controlar lo incontrolable. Como decía Epicteto: 'Hay cosas que puedes controlar y cosas que no'. Enfócate en lo que SÍ está en tus manos: tu esfuerzo, actitud y respuesta. ¿Puedes identificar qué parte de esta situación específicamente puedes controlar?"
-
-NUNCA:
-- Seas condescendiente o pedante
-- Uses lenguaje excesivamente formal
-- Ignores el contexto específico del usuario
-- Des respuestas genéricas o vagas
-
-Responde siempre en español colombiano neutral.`
-        };
-
-        // Variables globales
-        let isApiConfigured = !!OPENAI_API_KEY;
-        let requestCount = 0;
-        let isProcessing = false;
-
-        // ============ FUNCIONES PRINCIPALES ============
-
-        async function callOpenAI(userMessage, conversationHistory = []) {
-            if (!OPENAI_API_KEY) {
-                throw new Error('API key no configurada');
+        function closeZoom() {
+            const overlay = document.getElementById('zoomOverlay');
+            overlay.style.display = 'none';
+            if (zoomedChartInstance) {
+                zoomedChartInstance.destroy();
+                zoomedChartInstance = null;
             }
-
-            // Construir historial de conversación para contexto
-            const messages = [
-                { role: 'system', content: OPENAI_CONFIG.systemPrompt },
-                ...conversationHistory,
-                { role: 'user', content: userMessage }
-            ];
-
-            const response = await fetch(OPENAI_CONFIG.apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${OPENAI_API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: OPENAI_MODEL,
-                    messages: messages,
-                    max_tokens: OPENAI_CONFIG.maxTokens,
-                    temperature: OPENAI_CONFIG.temperature,
-                    presence_penalty: 0.1,
-                    frequency_penalty: 0.1
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `Error HTTP: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data.choices[0].message.content;
+            const content = document.getElementById('zoomContent');
+            content.innerHTML = '';
+            content.classList.remove('chart-zoomed');
         }
 
-        // Historial de conversación para contexto
-        let conversationHistory = [];
-
-        function addToHistory(role, content) {
-            conversationHistory.push({ role, content });
-            
-            // Mantener solo las últimas 10 interacciones para no exceder límites
-            if (conversationHistory.length > 20) {
-                conversationHistory = conversationHistory.slice(-20);
-            }
+        function zoomDashboard() {
+            const overlay = document.getElementById('zoomOverlay');
+            const content = document.getElementById('zoomContent');
+            content.innerHTML = `
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <button onclick="closeZoom()" style="background: #ff6b6b; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-family: Montserrat;">Cerrar</button>
+                </div>
+                <h3 style="color: #1e3c72; text-align: center; margin-bottom: 30px; font-size: 24px;">Dashboard de Reportería en Tiempo Real - Five9</h3>
+                <p>Aquí se mostraría la vista detallada y ampliada del dashboard...</p>
+            `;
+            overlay.style.display = 'flex';
         }
 
-        async function getBotResponse(userMessage) {
-            try {
-                updateAIStatus('processing', 'Procesando con IA...');
-                
-                const aiResponse = await callOpenAI(userMessage, conversationHistory);
-                
-                // Agregar al historial
-                addToHistory('user', userMessage);
-                addToHistory('assistant', aiResponse);
-                
-                // Actualizar contador
-                requestCount++;
-                document.getElementById('aiQueries').textContent = requestCount;
-                
-                updateAIStatus('connected', 'Conectado a OpenAI');
-                return aiResponse;
-                
-            } catch (error) {
-                console.error('Error OpenAI:', error);
-                updateAIStatus('error', 'Error de conexión');
-                
-                // Fallback a respuestas locales
-                return getFallbackResponse(userMessage, error.message);
-            }
-        }
-
-        function getFallbackResponse(userMessage, errorMessage) {
-            const fallbackResponses = [
-                `Disculpa, tengo problemas técnicos temporales 😅 Pero puedo ayudarte basándome en mi conocimiento estoico: 
-
-${getLocalStoicResponse(userMessage)}
-
-*Respuesta de emergencia - Pronto volveré con IA completa*`,
-                
-                `Mi conexión con OpenAI está intermitente, pero aquí tienes sabiduría estoica clásica:
-
-${getLocalStoicResponse(userMessage)}
-
-*Sistema local activado - Funcionalidad IA se restaurará pronto*`
-            ];
-            
-            return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
-        }
-
-        function getLocalStoicResponse(message) {
-            // Base de conocimiento local simplificada como fallback
-            const lowerMessage = message.toLowerCase();
-            
-            if (lowerMessage.includes('estrés') || lowerMessage.includes('presión') || lowerMessage.includes('agobio')) {
-                return `El estrés surge cuando perdemos perspectiva. Como enseñaba Marco Aurelio: "Tienes poder sobre tu mente, no sobre los eventos externos. Date cuenta de esto y encontrarás fortaleza." ¿Puedes identificar qué parte de tu situación SÍ puedes controlar?`;
-            }
-            
-            if (lowerMessage.includes('ansiedad') || lowerMessage.includes('nervios') || lowerMessage.includes('preocup')) {
-                return `La ansiedad es miedo al futuro, pero solo el presente es real. Séneca decía: "Sufrimos más en la imaginación que en la realidad." Respira profundo y enfócate en el aquí y ahora. ¿Qué es lo único que puedes hacer en este momento?`;
-            }
-            
-            if (lowerMessage.includes('trabajo') || lowerMessage.includes('jefe') || lowerMessage.includes('laboral')) {
-                return `En el trabajo solo controlas tu esfuerzo y actitud. Epicteto enseñaba: "No son los eventos los que nos perturban, sino nuestros juicios sobre ellos." ¿Cómo puedes responder desde tus valores más altos?`;
-            }
-            
-            if (lowerMessage.includes('relación') || lowerMessage.includes('pareja') || lowerMessage.includes('amor')) {
-                return `Las relaciones son oportunidades de crecimiento. Marco Aurelio escribió: "La mejor venganza es no ser como tu enemigo." ¿Puedes ver este conflicto como práctica de paciencia y comprensión?`;
-            }
-            
-            return `Todo desafío es una oportunidad para crecer en sabiduría. Como decía Epicteto: "No busques que los eventos sucedan como tú quieres, sino acepta los eventos como suceden y tendrás paz." ¿Puedes contarme más específicamente qué te preocupa?`;
-        }
-
-        function updateAIStatus(status, text) {
-            const dot = document.getElementById('aiStatusDot');
-            const statusText = document.getElementById('aiStatusText');
-            
-            dot.className = 'status-dot';
-            
-            switch(status) {
-                case 'connected':
-                    dot.classList.add('status-connected');
-                    break;
-                case 'error':
-                    dot.classList.add('status-error');
-                    break;
-                case 'processing':
-                    dot.classList.add('status-connected');
-                    break;
-            }
-            
-            statusText.textContent = text;
-        }
-
-        // ============ CONFIGURACIÓN DE API ============
-
-        function openApiConfig() {
-            document.getElementById('apiModal').style.display = 'block';
-            document.getElementById('apiKeyInput').value = OPENAI_API_KEY;
-        }
-
-        function closeApiConfig() {
-            document.getElementById('apiModal').style.display = 'none';
-        }
-
-        function saveApiKey() {
-            const apiKey = document.getElementById('apiKeyInput').value.trim();
-            
-            if (apiKey && apiKey.startsWith('sk-')) {
-                OPENAI_API_KEY = apiKey;
-                localStorage.setItem('openai_api_key', apiKey);
-                isApiConfigured = true;
-                updateAIStatus('connected', 'Conectado a OpenAI');
-                closeApiConfig();
-                
-                // Mensaje de confirmación
-                setTimeout(() => {
-                    addMessage("¡Perfecto! 🎉 Ahora tengo acceso a IA avanzada. Puedes hacerme preguntas más complejas y recibirás respuestas mucho más personalizadas y profundas. ¿En qué puedo ayudarte?");
-                }, 1000);
-            } else {
-                alert('Por favor ingresa una API key válida de OpenAI (debe empezar con sk-)');
-            }
-        }
-
-        // ============ FUNCIONES DE CHAT ============
-
-        function addMessage(content, isUser = false, isError = false) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
-            
-            const currentTime = new Date().toLocaleTimeString('es-CO', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            
-            const aiBadge = !isUser && isApiConfigured && !isError ? '<span class="ai-badge">IA</span>' : '';
-            const errorClass = isError ? 'class="error-message"' : '';
-            
-            messageDiv.innerHTML = `
-                <div class="avatar">${isUser ? '👤' : '🤖'}</div>
-                <div class="message-content">
-                    <div ${errorClass}>
-                        <p>${content}${aiBadge}</p>
-                    </div>
-                    <div class="message-time">${currentTime}</div>
+        function zoomChart(chartContainerElement) {
+            const originalCanvas = chartContainerElement.querySelector('canvas');
+            if (!originalCanvas) return;
+            const originalChartInstance = Chart.getChart(originalCanvas);
+            if (!originalChartInstance) return;
+            const chartConfig = originalChartInstance.config;
+            const chartTitle = chartContainerElement.querySelector('.chart-title').textContent;
+            const overlay = document.getElementById('zoomOverlay');
+            const content = document.getElementById('zoomContent');
+            content.classList.add('chart-zoomed');
+            content.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+                    <h3 style="color: #1e3c72; margin: 0; font-size: 1.2rem;">${chartTitle}</h3>
+                    <button onclick="closeZoom()" style="background: #ff6b6b; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-family: Montserrat;">Cerrar</button>
+                </div>
+                <div class="zoomed-chart-container">
+                    <canvas id="zoomedChartCanvas"></canvas>
                 </div>
             `;
-            
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            overlay.style.display = 'flex';
+            const zoomedCtx = document.getElementById('zoomedChartCanvas').getContext('2d');
+            const zoomedChartOptions = JSON.parse(JSON.stringify(chartConfig.options));
+            zoomedChartOptions.maintainAspectRatio = false;
+            zoomedChartInstance = new Chart(zoomedCtx, {
+                type: chartConfig.type,
+                data: chartConfig.data,
+                options: zoomedChartOptions
+            });
+        }
+        
+        function showTab(tabId, tabElement) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            tabElement.classList.add('active');
+            setTimeout(() => {
+                if (tabId === 'kpi1') createAutomationChart();
+                if (tabId === 'kpi2') createInasistenciaChart();
+                if (tabId === 'kpi3') createSatisfaccionChart();
+            }, 50);
         }
 
-        function showTyping() {
-            document.getElementById('typingIndicator').style.display = 'flex';
-            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
-        }
-
-        function hideTyping() {
-            document.getElementById('typingIndicator').style.display = 'none';
-        }
-
-        async function sendMessage() {
-            if (isProcessing) return;
-            
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (message === '') return;
-            
-            // Validaciones
-            if (message.length < 3) {
-                alert('Por favor escribe una pregunta más específica');
-                return;
-            }
-            
-            isProcessing = true;
-            const sendBtn = document.getElementById('sendBtn');
-            sendBtn.disabled = true;
-            sendBtn.innerHTML = '<div class="loading-spinner"></div>';
-            
-            // Agregar mensaje del usuario
-            addMessage(message, true);
-            input.value = '';
-            
-            // Mostrar indicador de escritura
-            showTyping();
-            
-            try {
-                let botResponse;
-                
-                if (!isApiConfigured) {
-                    // Mensaje pidiendo configuración
-                    botResponse = `Para darte respuestas más inteligentes y personalizadas, necesito que configures tu API key de OpenAI. 
-
-Por ahora puedo ayudarte con sabiduría estoica básica:
-
-${getLocalStoicResponse(message)}
-
-¿Quieres configurar la IA avanzada? Haz clic en "⚙️ Configurar API OpenAI" en la barra lateral.`;
-                    
-                    setTimeout(() => {
-                        hideTyping();
-                        addMessage(botResponse);
-                    }, 2000);
-                } else {
-                    // Usar OpenAI API
-                    botResponse = await getBotResponse(message);
-                    hideTyping();
-                    addMessage(botResponse);
-                }
-                
-            } catch (error) {
-                hideTyping();
-                addMessage(`Lo siento, hay un problema técnico. Mientras tanto, aquí tienes sabiduría estoica:
-
-${getLocalStoicResponse(message)}
-
-*Error: ${error.message}*`, false, true);
-            } finally {
-                isProcessing = false;
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = '➤';
+        function destroyChart(canvasId) {
+            const chart = Chart.getChart(canvasId);
+            if (chart) {
+                chart.destroy();
             }
         }
 
-        function sendQuickMessage(message) {
-            document.getElementById('messageInput').value = message;
-            sendMessage();
+        function createAutomationChart() {
+            const id = 'automationChart';
+            destroyChart(id);
+            new Chart(document.getElementById(id), {
+                type: 'line',
+                data: {
+                    labels: ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', 'Mes 5', 'Mes 6', 'Mes 7', 'Mes 8', 'Mes 9', 'Mes 10', 'Mes 11', 'Mes 12'],
+                    datasets: [{ label: 'Canales Digitales', data: [45, 48, 52, 55, 57, 59, 60, 60, 60, 60, 60, 60], borderColor: '#4ecdc4', backgroundColor: 'rgba(78, 205, 196, 0.1)', tension: 0.4, fill: true }, { label: 'Presencialidad', data: [55, 52, 48, 45, 43, 41, 40, 40, 40, 40, 40, 40], borderColor: '#ff6b6b', backgroundColor: 'rgba(255, 107, 107, 0.1)', tension: 0.4, fill: true }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: true, max: 70, ticks: { callback: v => v + '%' } } }, plugins: { legend: { labels: { font: { family: 'Montserrat' } } } } }
+            });
         }
 
-        // ============ EVENT LISTENERS ============
+        function createInasistenciaChart() {
+            const id = 'inasistenciaChart';
+            destroyChart(id);
+            new Chart(document.getElementById(id), {
+                type: 'line',
+                data: {
+                    labels: ['2023 Pico', '2024 Promedio', '2025 Objetivo'],
+                    datasets: [{ label: '% Inasistencia', data: [17, 12, 8], borderColor: '#1e3c72', backgroundColor: 'rgba(30, 60, 114, 0.1)', tension: 0.4, fill: true }, { label: 'Meta 10%', data: [10, 10, 10], borderColor: '#ff0000', backgroundColor: 'transparent', borderWidth: 2, borderDash: [5, 5], pointRadius: 0, fill: false }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: true, max: 20, ticks: { callback: v => v + '%' } } }, plugins: { legend: { labels: { font: { family: 'Montserrat' } } } } }
+            });
+        }
 
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
+        function createSatisfaccionChart() {
+            const id = 'satisfaccionChart';
+            destroyChart(id);
+            new Chart(document.getElementById(id), {
+                type: 'bar',
+                data: {
+                    labels: ['Muy Fácil', 'Fácil', 'Difícil', 'Muy Difícil'],
+                    datasets: [{ label: 'Actual', data: [11, 32, 30, 27], backgroundColor: '#ff6b6b' }, { label: 'Objetivo', data: [45, 40, 10, 5], backgroundColor: '#4ecdc4' }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: true, max: 50, ticks: { callback: v => v + '%' } } }, plugins: { legend: { labels: { font: { family: 'Montserrat' } } } } }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showTab('kpi1', document.querySelector('.tab.active'));
         });
-
-        // Cerrar modal al hacer clic fuera
-        window.onclick = function(event) {
-            const modal = document.getElementById('apiModal');
-            if (event.target === modal) {
-                closeApiConfig();
-            }
-        }
-
-        // ============ INICIALIZACIÓN ============
-
-        // Verificar estado inicial de API
-        if (isApiConfigured) {
-            updateAIStatus('connected', 'Conectado a OpenAI');
-        } else {
-            updateAIStatus('error', 'API no configurada');
-        }
-
-        // Mensaje inicial mejorado
-        setTimeout(() => {
-            if (!isApiConfigured) {
-                addMessage("👋 ¡Hola! Para darte la mejor experiencia posible, configura tu API key de OpenAI. Mientras tanto, puedo ayudarte con sabiduría estoica clásica. ¿En qué situación específica necesitas orientación?");
-            } else {
-                addMessage("¡Perfecto! Tengo acceso completo a IA avanzada. Puedes contarme situaciones complejas y te daré consejos estoicos profundos y personalizados. ¿Qué está pasando en tu vida que te preocupa? 🤔");
-            }
-        }, 3000);
     </script>
 </body>
 </html>
