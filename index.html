@@ -14,17 +14,61 @@
         #site-iframe {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1;
         }
+        
+        @keyframes pulseAnimation {
+            0% { transform: scale(1); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+            100% { transform: scale(1); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+        }
+
         #widget-trigger {
             position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background: linear-gradient(135deg, #2c2c2c 0%, #3a3a3a 100%);
             border-radius: 50%; cursor: pointer; z-index: 998; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
+            animation: pulseAnimation 2.5s infinite ease-in-out;
         }
         #widget-trigger:hover {
-            transform: scale(1.1); box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+            animation-play-state: paused;
+            transform: scale(1.1)!important; 
         }
         #widget-trigger img {
             width: 35px; height: auto;
         }
+
+        #proactive-message {
+            position: fixed;
+            bottom: 35px;
+            right: 100px;
+            background: linear-gradient(135deg, #d4af37, #b8941f);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 997;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+        }
+        #proactive-message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #proactive-message::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0; 
+            height: 0; 
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-left: 8px solid #b8941f;
+        }
+        
         #modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6);
             z-index: 999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s ease;
@@ -116,7 +160,6 @@
             margin: 0; line-height: 1.4; font-size: 0.85rem;
         }
         
-        /* === NUEVOS ESTILOS PARA LA BARRA DE ENTRADA === */
         .chat-input-area {
             flex-shrink: 0; padding: 10px 15px; background: #ffffff;
             border-top: 1px solid #e0e0e0; display: flex; align-items: center; gap: 10px;
@@ -145,14 +188,38 @@
              box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
         }
         
-        /* === ESTILOS ORIGINALES DE BOTONES Y OTROS ELEMENTOS (Sin cambios) === */
-        .button-options, .option-button, .quantity-selector, .quantity-btn, .quantity-display,
-        .continue-button, .cost-display, .summary-table, .summary-row, .progress-bar, .progress-fill,
-        .implementation-cards, .implementation-card, .card-icon, .card-title, .card-subtitle, .card-price, .card-hours {
-            /* Todos los estilos originales se mantienen */
+        /* === ESTILOS ORIGINALES DE BOTONES (Sin cambios) === */
+        .button-options{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.option-button{background:linear-gradient(135deg,#f8f9fa,#e9ecef);border:2px solid #d4af37;color:#2c2c2c;padding:6px 12px;border-radius:15px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:.75rem;cursor:pointer;transition:all .3s ease;white-space:nowrap}.option-button:hover{background:linear-gradient(135deg,#d4af37,#b8941f);color:#fff;transform:translateY(-2px);box-shadow:0 4px 15px rgba(212,175,55,.3)}.option-button.selected{background:linear-gradient(135deg,#d4af37,#b8941f);color:#fff}.quantity-selector{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px;background:#f8f9fa;border-radius:10px;border:1px solid #dee2e6}.quantity-btn{width:25px;height:25px;border:none;border-radius:50%;background:#d4af37;color:#fff;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease;font-size:.8rem}.quantity-btn:hover{background:#b8941f;transform:scale(1.1)}.quantity-display{font-weight:700;font-size:.9rem;color:#2c2c2c;min-width:30px;text-align:center}.continue-button{background:linear-gradient(135deg,#d4af37,#b8941f);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;margin-top:10px;transition:all .3s ease;align-self:flex-start}.continue-button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,175,55,.4)}.cost-display{background:linear-gradient(135deg,#2c2c2c,#3a3a3a);color:#d4af37;padding:12px;border-radius:10px;margin-top:8px;font-weight:700;text-align:center;font-size:.9rem}.summary-table{background:#fff;border-radius:10px;overflow:hidden;margin-top:12px;box-shadow:0 4px 15px rgba(0,0,0,.1)}.summary-row{display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:.8rem}.summary-row:last-child{border-bottom:none;background:linear-gradient(135deg,#d4af37,#b8941f);color:#fff;font-weight:700}.progress-bar{height:3px;background:#e0e0e0;position:absolute;top:0;left:0;right:0}.progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#b8941f);transition:width .5s ease;width:0%}
+        
+        /* === INICIO: NUEVOS ESTILOS PARA TARJETAS DE IMPLEMENTACIÓN === */
+        .implementation-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+        .implementation-card{background:#fff;border:2px solid #e0e0e0;border-radius:15px;padding:12px;text-align:center;cursor:pointer;transition:all .3s ease; display: flex; flex-direction: column; justify-content: space-between; height: 100%;}
+        .implementation-card:hover{border-color:#d4af37;transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,175,55,.2)}
+        .implementation-card.selected{border-color:#d4af37;background:linear-gradient(135deg,#fffbe6,#fff9d6); box-shadow:0 6px 20px rgba(212,175,55,.2);}
+        .card-icon{font-size:1.8rem;margin-bottom:5px; color: #007bff;}
+        .card-title{font-weight:700;color:#2c2c2c;margin-bottom:3px;font-size:.9rem}
+        .card-subtitle{color:#666;font-size:.75rem;margin-bottom:5px}
+        .card-price{font-size:1.1rem;font-weight:700;color:#d4af37;margin-bottom:0}
+        .card-hours{color:#888;font-size:.7rem; margin-bottom: 10px;}
+        .card-features {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+            text-align: left;
+            font-size: 0.75rem;
+            color: #555;
         }
-        /* ... (pegado de tus estilos originales para brevedad) ... */
-        .button-options{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.option-button{background:linear-gradient(135deg,#f8f9fa,#e9ecef);border:2px solid #d4af37;color:#2c2c2c;padding:6px 12px;border-radius:15px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:.75rem;cursor:pointer;transition:all .3s ease;white-space:nowrap}.option-button:hover{background:linear-gradient(135deg,#d4af37,#b8941f);color:#fff;transform:translateY(-2px);box-shadow:0 4px 15px rgba(212,175,55,.3)}.option-button.selected{background:linear-gradient(135deg,#d4af37,#b8941f);color:#fff}.quantity-selector{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px;background:#f8f9fa;border-radius:10px;border:1px solid #dee2e6}.quantity-btn{width:25px;height:25px;border:none;border-radius:50%;background:#d4af37;color:#fff;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease;font-size:.8rem}.quantity-btn:hover{background:#b8941f;transform:scale(1.1)}.quantity-display{font-weight:700;font-size:.9rem;color:#2c2c2c;min-width:30px;text-align:center}.continue-button{background:linear-gradient(135deg,#d4af37,#b8941f);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;margin-top:10px;transition:all .3s ease;align-self:flex-start}.continue-button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,175,55,.4)}.cost-display{background:linear-gradient(135deg,#2c2c2c,#3a3a3a);color:#d4af37;padding:12px;border-radius:10px;margin-top:8px;font-weight:700;text-align:center;font-size:.9rem}.summary-table{background:#fff;border-radius:10px;overflow:hidden;margin-top:12px;box-shadow:0 4px 15px rgba(0,0,0,.1)}.summary-row{display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:.8rem}.summary-row:last-child{border-bottom:none;background:linear-gradient(135deg,#d4af37,#b8941f);color:#fff;font-weight:700}.progress-bar{height:3px;background:#e0e0e0;position:absolute;top:0;left:0;right:0}.progress-fill{height:100%;background:linear-gradient(90deg,#d4af37,#b8941f);transition:width .5s ease;width:0%}.implementation-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.implementation-card{background:#fff;border:2px solid #e0e0e0;border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .3s ease}.implementation-card:hover{border-color:#d4af37;transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,175,55,.2)}.implementation-card.selected{border-color:#d4af37;background:linear-gradient(135deg,#fffbe6,#fff9d6)}.card-icon{font-size:1.5rem;margin-bottom:5px}.card-title{font-weight:700;color:#2c2c2c;margin-bottom:3px;font-size:.8rem}.card-subtitle{color:#666;font-size:.7rem;margin-bottom:5px}.card-price{font-size:1rem;font-weight:700;color:#d4af37;margin-bottom:3px}.card-hours{color:#888;font-size:.7rem}
+        .card-features li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+        .card-features .fas {
+            color: #28a745;
+            margin-right: 6px;
+            margin-top: 2px;
+        }
+        /* === FIN: NUEVOS ESTILOS === */
 
         @keyframes slideInUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -171,6 +238,7 @@
     <div id="widget-trigger">
         <img src="https://cdn3d.iconscout.com/3d/premium/thumb/asistente-robot-8137090-6617492.png" alt="Abrir Asistente">
     </div>
+    <div id="proactive-message">¿tienes dudas? ¡preguntame!</div>
 
     <div id="modal-overlay">
         <div id="modal-content">
@@ -207,8 +275,10 @@
     // === SCRIPT PARA CONTROLAR EL MODAL Y EL WIDGET ===
     const widgetTrigger = document.getElementById('widget-trigger');
     const modalOverlay = document.getElementById('modal-overlay');
+    const proactiveMessage = document.getElementById('proactive-message');
 
     widgetTrigger.addEventListener('click', () => {
+        proactiveMessage.classList.remove('visible');
         modalOverlay.classList.add('visible');
         if (!window.calculator || window.calculator.isFinished) {
             window.calculator = new AICostCalculator();
@@ -234,12 +304,10 @@
 
     class AICostCalculator {
         constructor() {
-            // Flujo y datos de la conversación inicial
-            this.flowState = 'ASK_PRODUCT';
+            // ... (El constructor se mantiene igual) ...
+             this.flowState = 'ASK_PRODUCT';
             this.leadData = {};
             this.isFinished = false;
-
-            // Datos y costos del cotizador original
             this.step = 0;
             this.totalSteps = 8;
             this.data = {
@@ -252,25 +320,24 @@
                 ai: { loading: 0, storage: 0, usage: 0, monthly: 0 },
                 notifications: 0, implementation: 0
             };
-
-            // Elementos del DOM
             this.messagesContainer = document.getElementById('chatMessages');
             this.userInput = document.getElementById('userInput');
             this.sendMessageBtn = document.getElementById('sendMessageBtn');
             this.attachFileBtn = document.getElementById('attachFileBtn');
             this.emojiPickerBtn = document.getElementById('emojiPickerBtn');
             this.chatTitle = document.getElementById('chat-title');
-
             this.init();
         }
 
         init() {
+             // ... (Init se mantiene igual) ...
             this.messagesContainer.innerHTML = '';
             this.setupInputHandlers();
             this.askProduct();
         }
 
         setupInputHandlers() {
+            // ... (setupInputHandlers se mantiene igual) ...
             this.sendMessageBtn.onclick = () => this.handleUserInput();
             this.userInput.onkeydown = (event) => {
                 if (event.key === 'Enter') {
@@ -283,18 +350,17 @@
         }
 
         async handleUserInput() {
+            // ... (handleUserInput se mantiene igual) ...
             const text = this.userInput.value.trim();
             if (!text) return;
-
             await this.addMessage(`<p>${text}</p>`, true);
             this.userInput.value = '';
-            
             this.processInput(text);
         }
 
         async processInput(text) {
+            // ... (processInput se mantiene igual) ...
             const normalizedText = text.toLowerCase().replace(/\s+/g, '');
-
             switch (this.flowState) {
                 case 'ASK_PRODUCT':
                     if (normalizedText.includes('mindx')) this.handleMindxSelection();
@@ -302,22 +368,13 @@
                     else this.showInvalidOption();
                     break;
                 case 'ASK_QUOTE':
-                    if (['si', 'sí', 'yes', 'claro', 'correcto'].includes(normalizedText)) this.askForName();
-                    else if (['no', 'nop', 'despues'].includes(normalizedText)) this.endConversation();
+                    if (['si', 'sí', 'cotizar', 'yes', 'claro'].includes(normalizedText)) this.askForName();
+                    else if (['no', 'explorar', 'soloexplorar'].includes(normalizedText)) this.startExplorerMode();
                     else this.showInvalidOption();
                     break;
-                case 'COLLECT_NAME':
-                    this.leadData.name = text;
-                    this.askForPhone();
-                    break;
-                case 'COLLECT_PHONE':
-                    this.leadData.phone = text;
-                    this.askForCompany();
-                    break;
-                case 'COLLECT_COMPANY':
-                    this.leadData.company = text;
-                    this.askForEmail();
-                    break;
+                case 'COLLECT_NAME': this.leadData.name = text; this.askForPhone(); break;
+                case 'COLLECT_PHONE': this.leadData.phone = text; this.askForCompany(); break;
+                case 'COLLECT_COMPANY': this.leadData.company = text; this.askForEmail(); break;
                 case 'COLLECT_EMAIL':
                     if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)) {
                         this.leadData.email = text;
@@ -327,112 +384,31 @@
                         await this.addMessage(`<p>El formato del correo no parece válido. Por favor, ingrésalo de nuevo.</p>`);
                     }
                     break;
-                case 'CALCULATOR_FLOW':
-                    this.handleCalculatorInput(normalizedText);
-                    break;
+                case 'CALCULATOR_FLOW': this.handleCalculatorInput(normalizedText); break;
             }
         }
         
-        handleCalculatorInput(normalizedText) {
-             const options = this.getCurrentCalculatorOptions();
-             const matchedOption = Object.keys(options).find(key => normalizedText.includes(key));
- 
-             if (matchedOption) {
-                 options[matchedOption]();
-             } else {
-                  this.addMessage(`<p>No he entendido tu respuesta. Por favor, usa los botones o escribe una de las opciones mostradas.</p>`);
-             }
-        }
- 
-        getCurrentCalculatorOptions() {
-             const options = {};
-             const allButtons = this.messagesContainer.querySelectorAll('.option-button, .continue-button');
-             allButtons.forEach(btn => {
-                 let key = (btn.dataset.channel || btn.dataset.package?.split('-')[4] || btn.innerText).toLowerCase().replace(/[^a-z0-9]/g, '');
-                 if (key) options[key] = () => btn.click();
-             });
-             return options;
-        }
-
-        async showInvalidOption() {
-            await this.addMessage('<p>No he entendido tu respuesta. Por favor, elige una de las opciones disponibles.</p>');
-        }
-
-        // --- Flujo de Conversación Inicial ---
-        async askProduct() {
-            await this.addMessage(`
-                <p>¡Hola! 👋 Soy tu asistente virtual de AXD.</p>
-                <p>Para ayudarte mejor, ¿en qué tipo de producto estás interesado?</p>
-                <div class="button-options">
-                    <button class="option-button" onclick="window.calculator.handleMindxSelection()">🤖 MindX</button>
-                    <button class="option-button" onclick="window.calculator.handleOtherProducts('Ciberseguridad')">🛡️ Ciberseguridad</button>
-                    <button class="option-button" onclick="window.calculator.handleOtherProducts('Biometrix')">👤 Biometrix</button>
-                </div>
-            `);
-        }
+        // ... (El resto de las funciones de flujo inicial se mantienen igual) ...
+        handleCalculatorInput(normalizedText) {const options = this.getCurrentCalculatorOptions(); const matchedOption = Object.keys(options).find(key => normalizedText.includes(key)); if (matchedOption) { options[matchedOption](); } else { this.addMessage(`<p>No he entendido tu respuesta. Por favor, usa los botones o escribe una de las opciones mostradas.</p>`); }}
+        getCurrentCalculatorOptions() {const options = {}; const allButtons = this.messagesContainer.querySelectorAll('.option-button, .continue-button'); allButtons.forEach(btn => { let key = (btn.dataset.channel || btn.dataset.package?.split('-')[4] || btn.innerText).toLowerCase().replace(/[^a-z0-9]/g, ''); if (key) options[key] = () => btn.click(); }); return options;}
+        async showInvalidOption() {await this.addMessage('<p>No he entendido tu respuesta. Por favor, elige una de las opciones disponibles.</p>');}
+        async askProduct() {await this.addMessage(`<p>¡Hola! 👋 Soy tu asistente virtual de AXD.</p><p>Para ayudarte mejor, ¿en qué tipo de producto estás interesado?</p><div class="button-options"><button class="option-button" onclick="window.calculator.handleMindxSelection()">🤖 MindX</button><button class="option-button" onclick="window.calculator.handleOtherProducts('Ciberseguridad')">🛡️ Ciberseguridad</button><button class="option-button" onclick="window.calculator.handleOtherProducts('Biometrix')">👤 Biometrix</button></div>`);}
+        async handleMindxSelection() {this.flowState = 'ASK_QUOTE'; await this.addMessage('<p>🤖 Has seleccionado <strong>MindX</strong>.</p>', true); await this.addMessage(`<p>¡Genial! Con MindX puedes automatizar conversaciones o simplemente explorar sus capacidades.</p><p>¿Qué te gustaría hacer?</p><div class="button-options"><button class="option-button" onclick="window.calculator.askForName()">✅ ¡Sí, cotizar!</button><button class="option-button" onclick="window.calculator.startExplorerMode()">🚀 Sólo explorar</button></div>`);}
+        async handleOtherProducts(product) {this.isFinished = true; await this.addMessage(`<p>Has seleccionado <strong>${product}</strong>.</p>`, true); await this.addMessage(`<p>¡Excelente elección! Para darte información detallada sobre <strong>${product}</strong>, uno de nuestros especialistas se pondrá en contacto contigo.</p><p>Gracias por tu interés en AXD.</p>`);}
+        async startExplorerMode() {await this.addMessage('<p>🚀 Sólo explorar</p>', true); await this.addMessage(`<p>¡Perfecto! Vamos a explorar las opciones del cotizador.</p>`); this.transitionToCalculator();}
+        async askForName() {this.flowState = 'COLLECT_NAME'; await this.addMessage('<p>✅ ¡Sí, cotizar!</p>', true); await this.addMessage('<p>Estupendo. Para generar tu cotización formal, por favor dime tu <strong>nombre completo</strong>.</p>');}
+        async askForPhone() {this.flowState = 'COLLECT_PHONE'; await this.addMessage('<p>Gracias. Ahora, por favor, indícame tu <strong>número de teléfono</strong>.</p>');}
+        async askForCompany() {this.flowState = 'COLLECT_COMPANY'; await this.addMessage('<p>¡Genial! ¿Cuál es el <strong>nombre de tu empresa</strong>?</p>');}
+        async askForEmail() {this.flowState = 'COLLECT_EMAIL'; await this.addMessage('<p>Casi terminamos. Por favor, proporciona tu <strong>correo electrónico</strong> donde enviaremos la cotización.</p>');}
+        async endConversation() {this.isFinished = true; await this.addMessage('<p>Entendido. Si cambias de opinión, estaré aquí para ayudarte. ¡Que tengas un buen día!</p>');}
+        async transitionToCalculator() {this.flowState = 'CALCULATOR_FLOW'; this.chatTitle.innerText = 'Calculadora de Costos IA'; await this.addMessage(`<p>Ahora comencemos a configurar tu solución <strong>MindX</strong>. 🚀</p>`); this.startCalculatorFlow();}
         
-        async handleMindxSelection() {
-            this.flowState = 'ASK_QUOTE';
-            await this.addMessage('<p>🤖 Has seleccionado <strong>MindX</strong>.</p>', true);
-            await this.addMessage(`
-                <p>MindX es nuestra plataforma de IA para automatizar conversaciones.</p>
-                <p>¿Te gustaría hacer una cotización ahora mismo?</p>
-                <div class="button-options">
-                    <button class="option-button" onclick="window.calculator.askForName()">✅ ¡Sí, cotizar!</button>
-                    <button class="option-button" onclick="window.calculator.endConversation()">❌ No, gracias</button>
-                </div>
-            `);
-        }
-        
-        async handleOtherProducts(product) {
-            this.isFinished = true;
-            await this.addMessage(`<p>Has seleccionado <strong>${product}</strong>.</p>`, true);
-            await this.addMessage(`
-                <p>¡Excelente elección! Para darte información detallada sobre <strong>${product}</strong>, uno de nuestros especialistas se pondrá en contacto contigo.</p>
-                <p>Gracias por tu interés en AXD.</p>
-            `);
-        }
-        
-        async askForName() {
-            this.flowState = 'COLLECT_NAME';
-            await this.addMessage('<p>✅ ¡Sí, cotizar!</p>', true);
-            await this.addMessage('<p>Perfecto. Para comenzar, por favor dime tu <strong>nombre completo</strong>.</p>');
-        }
-        
-        async askForPhone() {
-            this.flowState = 'COLLECT_PHONE';
-            await this.addMessage('<p>Gracias. Ahora, por favor, indícame tu <strong>número de teléfono</strong>.</p>');
-        }
-
-        async askForCompany() {
-            this.flowState = 'COLLECT_COMPANY';
-            await this.addMessage('<p>¡Genial! ¿Cuál es el <strong>nombre de tu empresa</strong>?</p>');
-        }
-
-        async askForEmail() {
-            this.flowState = 'COLLECT_EMAIL';
-            await this.addMessage('<p>Casi terminamos. Por favor, proporciona tu <strong>correo electrónico</strong> donde enviaremos la cotización.</p>');
-        }
-        
-        async endConversation() {
-            this.isFinished = true;
-            await this.addMessage('<p>Entendido. Si cambias de opinión, estaré aquí para ayudarte. ¡Que tengas un buen día!</p>');
-        }
-
-        async transitionToCalculator() {
-            this.flowState = 'CALCULATOR_FLOW';
-            this.chatTitle.innerText = 'Calculadora de Costos IA';
-            await this.addMessage(`<p>¡Perfecto! Ahora comencemos con la cotización para tu solución <strong>MindX</strong>. 🚀</p>`);
-            this.startCalculatorFlow();
-        }
-
-        // --- INICIO: CÓDIGO DEL COTIZADOR ORIGINAL (INTACTO) ---
+        // --- INICIO: CÓDIGO DEL COTIZADOR ORIGINAL (Funciones intactas) ---
         
         async startCalculatorFlow() {
             this.updateProgress();
-            // El `startConversation` original ahora es el primer paso del cotizador
             await this.addMessage(`
-                <p>Te ayudaré a calcular los costos de tu solución de <strong>Canales Digitales con IA</strong>.</p>
+                <p>Este cotizador te guiará paso a paso.</p>
                 <p>¿Estás listo para comenzar? 🚀</p>
                 <div class="button-options">
                     <button class="option-button" onclick="window.calculator.nextStep()">¡Sí, comencemos! 🎯</button>
@@ -441,7 +417,7 @@
         }
 
         updateProgress() {
-            const progress = this.flowState === 'CALCULATOR_FLOW' ? ((this.step + 1) / this.totalSteps) * 100 : 0;
+            const progress = this.flowState === 'CALCULATOR_FLOW' ? ((this.step) / this.totalSteps) * 100 : 0;
             document.getElementById('progressFill').style.width = `${progress}%`;
         }
         
@@ -479,7 +455,6 @@
         async nextStep() {
             this.step++;
             this.updateProgress();
-
             switch(this.step) {
                 case 1: await this.stepChannels(); break;
                 case 2: await this.stepPackages(); break;
@@ -487,99 +462,94 @@
                 case 4: await this.stepAgents(); break;
                 case 5: await this.stepAI(); break;
                 case 6: await this.stepNotifications(); break;
-                case 7: await this.stepImplementation(); break;
+                case 7: await this.stepImplementation(); break; // <-- ESTA FUNCIÓN SE MODIFICA
                 case 8: await this.stepSummary(); break;
             }
         }
-
-        async stepChannels() {
+        
+        // --- INICIO: FUNCIÓN DE IMPLEMENTACIÓN ACTUALIZADA ---
+        async stepImplementation() {
             await this.addMessage(`
-                <p><strong>Canales digitales</strong> 📱</p>
-                <p>💰 <span style="color: #d4af37;">Primer canal GRATUITO</span>. Adicionales: $100 USD/mes c/u.</p>
-                <p>¿Cuáles necesitas?</p>
-                <div class="button-options">
-                    <button class="option-button" data-channel="whatsapp" onclick="window.calculator.toggleChannel(this)">📱 WhatsApp</button>
-                    <button class="option-button" data-channel="telegram" onclick="window.calculator.toggleChannel(this)">✈️ Telegram</button>
-                    <button class="option-button" data-channel="facebook" onclick="window.calculator.toggleChannel(this)">📘 Messenger</button>
-                    <button class="option-button" data-channel="instagram" onclick="window.calculator.toggleChannel(this)">📷 Instagram</button>
-                    <button class="option-button" data-channel="webchat" onclick="window.calculator.toggleChannel(this)">💬 WebChat</button>
+                <p><strong>Paquete de Implementación</strong> 🛠️</p>
+                <p>Elige el tipo de implementación que mejor se ajuste a tus necesidades. Este es un pago único para el diseño, desarrollo y despliegue de tu solución.</p>
+                <div class="implementation-cards">
+                    
+                    <div class="implementation-card" data-impl="A-1400-40-Básico" onclick="window.calculator.selectImplementation(this)">
+                        <div>
+                            <div class="card-icon">🔄</div>
+                            <div class="card-title">TIPO A</div>
+                            <div class="card-subtitle">Flujos Básicos</div>
+                            <div class="card-price">$1,400 USD</div>
+                            <div class="card-hours">40 horas incluidas</div>
+                        </div>
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> Navegación por botones</li>
+                            <li><i class="fas fa-check-circle"></i> Respuestas preestablecidas</li>
+                            <li><i class="fas fa-check-circle"></i> Sin integraciones externas</li>
+                        </ul>
+                    </div>
+
+                    <div class="implementation-card" data-impl="B-2800-80-Intermedio" onclick="window.calculator.selectImplementation(this)">
+                        <div>
+                            <div class="card-icon">🔗</div>
+                            <div class="card-title">TIPO B</div>
+                            <div class="card-subtitle">Flujos con Integraciones</div>
+                            <div class="card-price">$2,800 USD</div>
+                            <div class="card-hours">80 horas incluidas</div>
+                        </div>
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> Consumo de APIs/Webservices</li>
+                            <li><i class="fas fa-check-circle"></i> Conexión a BD/CRM</li>
+                            <li><i class="fas fa-check-circle"></i> Validaciones complejas</li>
+                        </ul>
+                    </div>
+
+                    <div class="implementation-card selected" data-impl="C-4200-120-Avanzado" onclick="window.calculator.selectImplementation(this)">
+                        <div>
+                            <div class="card-icon">🤖</div>
+                            <div class="card-title">TIPO C</div>
+                            <div class="card-subtitle">IA Generativa</div>
+                            <div class="card-price">$4,200 USD</div>
+                            <div class="card-hours">120 horas incluidas</div>
+                        </div>
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> IA Generativa integrada</li>
+                            <li><i class="fas fa-check-circle"></i> Base de conocimiento</li>
+                            <li><i class="fas fa-check-circle"></i> Respuestas contextuales</li>
+                        </ul>
+                    </div>
+
+                    <div class="implementation-card" data-impl="D-custom-custom-Custom" onclick="window.calculator.selectImplementation(this)">
+                        <div>
+                            <div class="card-icon">⚙️</div>
+                            <div class="card-title">TIPO D</div>
+                            <div class="card-subtitle">Solución Custom</div>
+                            <div class="card-price">A cotizar</div>
+                            <div class="card-hours">Horas variables</div>
+                        </div>
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> Desarrollo a medida</li>
+                            <li><i class="fas fa-check-circle"></i> Requisitos específicos</li>
+                            <li><i class="fas fa-check-circle"></i> Consultoría especializada</li>
+                        </ul>
+                    </div>
+
                 </div>
-                <button class="continue-button" onclick="window.calculator.channelsContinue()" style="display: none;">Continuar ➡</button>
             `);
         }
-
-        toggleChannel(button) {
-            const channel = button.dataset.channel;
-            button.classList.toggle('selected');
-            
-            if (button.classList.contains('selected')) {
-                if (!this.data.channels.includes(channel)) this.data.channels.push(channel);
-            } else {
-                this.data.channels = this.data.channels.filter(c => c !== channel);
-            }
-            
-            this.calculateChannelCosts();
-            
-            const continueBtn = button.parentElement.parentElement.querySelector('.continue-button');
-            if(continueBtn) continueBtn.style.display = this.data.channels.length > 0 ? 'block' : 'none';
-        }
-
-        calculateChannelCosts() {
-            const channelsCount = this.data.channels.length;
-            this.costs.channels = channelsCount > 0 ? (channelsCount - 1) * 100 : 0;
-        }
-
-        async channelsContinue() {
-            const channelNames = { whatsapp: 'WhatsApp', telegram: 'Telegram', facebook: 'Facebook Messenger', instagram: 'Instagram Direct', webchat: 'WebChat' };
-            const selectedNames = this.data.channels.map(c => channelNames[c]).join(', ');
-            
-            await this.addMessage(`<p>✅ Seleccionados: <strong>${selectedNames}</strong></p><div class="cost-display"><strong>Canales:</strong> ${this.data.channels.length}<br><strong>Costo:</strong> ${this.formatCurrency(this.costs.channels)} USD/mes${this.data.channels.length > 0 ? '<br><small>(Primer canal gratis)</small>' : ''}</div>`, true);
-            await this.nextStep();
-        }
-
-        async stepPackages() { /* El resto de tus funciones originales aquí... */ }
-        async selectPackage(button) { /* ... */ }
-        changeQuantity(field, change) { /* ... */ }
-        async packagesContinue() { /* ... */ }
-        async stepInsights() { /* ... */ }
-        updateInsightsCost() { /* ... */ }
-        async insightsContinue() { /* ... */ }
-        async stepAgents() { /* ... */ }
-        updateAgentsCost() { /* ... */ }
-        async agentsContinue() { /* ... */ }
-        async stepAI() { /* ... */ }
-        async selectAI(include) { /* ... */ }
-        changeAIConfig(field, change) { /* ... */ }
-        selectUpdateFreq(button) { /* ... */ }
-        calculateAICosts() { /* ... */ }
-        async aiContinue() { /* ... */ }
-        async stepNotifications() { /* ... */ }
-        async selectNotifications(include) { /* ... */ }
-        changeNotification(type, change) { /* ... */ }
-        calculateNotificationCosts() { /* ... */ }
-        async notificationsContinue() { /* ... */ }
-        async stepImplementation() { /* ... */ }
-        selectImplementation(card) { /* ... */ }
-        async implementationContinue() { /* ... */ }
-        async stepSummary() { /* ... */ }
-
-        // Mapeo de las funciones originales para evitar reescribirlas
-        // (Asegúrate de que estas funciones existen en tu código original)
-        // [Copiadas y pegadas abajo para completitud]
-
-        contactSales() {
-            window.parent.postMessage('contactSales', '*');
-        }
-
-        restart() {
-            this.isFinished = true;
-            const newCalculator = new AICostCalculator();
-            window.calculator = newCalculator;
-        }
+        // --- FIN: FUNCIÓN DE IMPLEMENTACIÓN ACTUALIZADA ---
+        
+        // El resto de las funciones originales se pegan aquí para completitud
+        contactSales() { window.parent.postMessage('contactSales', '*'); }
+        restart() { this.isFinished = true; const newCalculator = new AICostCalculator(); window.calculator = newCalculator; }
     }
 
-    // --- PEGADO DE FUNCIONES ORIGINALES RESTANTES ---
+    // --- PEGADO DE FUNCIONES ORIGINALES RESTANTES DEL COTIZADOR ---
     Object.assign(AICostCalculator.prototype, {
+        async stepChannels() {await this.addMessage(`<p><strong>Canales digitales</strong> 📱</p><p>💰 <span style="color: #d4af37;">Primer canal GRATUITO</span>. Adicionales: $100 USD/mes c/u.</p><p>¿Cuáles necesitas?</p><div class="button-options"><button class="option-button" data-channel="whatsapp" onclick="window.calculator.toggleChannel(this)">📱 WhatsApp</button><button class="option-button" data-channel="telegram" onclick="window.calculator.toggleChannel(this)">✈️ Telegram</button><button class="option-button" data-channel="facebook" onclick="window.calculator.toggleChannel(this)">📘 Messenger</button><button class="option-button" data-channel="instagram" onclick="window.calculator.toggleChannel(this)">📷 Instagram</button><button class="option-button" data-channel="webchat" onclick="window.calculator.toggleChannel(this)">💬 WebChat</button></div><button class="continue-button" onclick="window.calculator.channelsContinue()" style="display: none;">Continuar ➡</button>`);},
+        toggleChannel(button) {const channel = button.dataset.channel;button.classList.toggle('selected');if (button.classList.contains('selected')) {if (!this.data.channels.includes(channel)) this.data.channels.push(channel);} else {this.data.channels = this.data.channels.filter(c => c !== channel);}this.calculateChannelCosts();const continueBtn = button.parentElement.parentElement.querySelector('.continue-button');if(continueBtn) continueBtn.style.display = this.data.channels.length > 0 ? 'block' : 'none';},
+        calculateChannelCosts() {const channelsCount = this.data.channels.length;this.costs.channels = channelsCount > 0 ? (channelsCount - 1) * 100 : 0;},
+        async channelsContinue() {const channelNames = { whatsapp: 'WhatsApp', telegram: 'Telegram', facebook: 'Facebook Messenger', instagram: 'Instagram Direct', webchat: 'WebChat' };const selectedNames = this.data.channels.map(c => channelNames[c]).join(', ');await this.addMessage(`<p>✅ Seleccionados: <strong>${selectedNames}</strong></p><div class="cost-display"><strong>Canales:</strong> ${this.data.channels.length}<br><strong>Costo:</strong> ${this.formatCurrency(this.costs.channels)} USD/mes${this.data.channels.length > 0 ? '<br><small>(Primer canal gratis)</small>' : ''}</div>`, true);await this.nextStep();},
         async stepPackages() {await this.addMessage(`<p><strong>Paquete de conversaciones</strong> 📊</p><p>Incluye licencias MindX Insights para análisis.</p><div class="button-options"><button class="option-button" data-package="3500-283-1-0.075-Básico" onclick="window.calculator.selectPackage(this)">📦 Básico<br><small>3.5K conv - $283</small></button><button class="option-button" data-package="5500-343-1-0.059-Estándar" onclick="window.calculator.selectPackage(this)">📊 Estándar<br><small>5.5K conv - $343</small></button><button class="option-button" data-package="8500-453-2-0.049-Profesional" onclick="window.calculator.selectPackage(this)">🚀 Profesional<br><small>8.5K conv - $453</small></button><button class="option-button" data-package="10000-510-2-0.047-Empresarial" onclick="window.calculator.selectPackage(this)">🏢 Empresarial<br><small>10K conv - $510</small></button></div>`);},
         async selectPackage(button) {button.parentElement.querySelectorAll('.option-button').forEach(btn =>btn.classList.remove('selected'));button.classList.add('selected');const [conversations, price, licenses, additionalCost, name] = button.dataset.package.split('-');this.data.package = {conversations: parseInt(conversations),price: parseFloat(price),licenses: parseInt(licenses),additionalCost: parseFloat(additionalCost),name: name};this.costs.package = this.data.package.price;await this.addMessage(`<p>✅ Paquete <strong>${name}</strong> seleccionado</p><div class="cost-display"><strong>Conversaciones:</strong> ${conversations}<br><strong>Licencias:</strong> ${licenses}<br><strong>Costo:</strong> ${this.formatCurrency(parseFloat(price))} USD/mes</div><p>¿Conversaciones adicionales? (${this.formatCurrency(parseFloat(additionalCost))} c/u)</p><div class="quantity-selector"><button class="quantity-btn" onclick="window.calculator.changeQuantity('additionalConversations', -100)">-</button><span class="quantity-display" id="additionalConversations">0</span><button class="quantity-btn" onclick="window.calculator.changeQuantity('additionalConversations', 100)">+</button><span style="margin-left: 5px; color: #666; font-size: 0.75rem;">adicionales</span></div><button class="continue-button" onclick="window.calculator.packagesContinue()">Continuar ➡</button>`, true);},
         changeQuantity(field, change) {this.data[field] = Math.max(0, (this.data[field] || 0) + change);const element = document.getElementById(field);if (element) {element.textContent = this.data[field];}if (field === 'additionalConversations' && this.data.package) {this.costs.package = this.data.package.price +(this.data.additionalConversations * this.data.package.additionalCost);} else if (field === 'additionalInsights') {this.updateInsightsCost();} else if (field === 'agentLicenses') {this.updateAgentsCost();}},
@@ -601,7 +571,6 @@
         changeNotification(type, change) {this.data.notifications[type] = Math.max(0, this.data.notifications[type] + change);const element = document.getElementById(type);if (element) {element.textContent = this.data.notifications[type];}this.calculateNotificationCosts();},
         calculateNotificationCosts() {const prices = { marketing: 0.0150, utility: 0.0024, authentication: 0.0092 };this.costs.notifications =(this.data.notifications.marketing * prices.marketing) +(this.data.notifications.utility * prices.utility) +(this.data.notifications.authentication || 0 * prices.authentication);const costDisplay = document.getElementById('notificationsCost');if (costDisplay) {const total = this.data.notifications.marketing + this.data.notifications.utility;costDisplay.innerHTML = `<strong>Total:</strong> ${total.toLocaleString('es-CO')}<br><strong>Costo:</strong> ${this.formatCurrency(this.costs.notifications)} USD/mes`;}},
         async notificationsContinue() {const total = this.data.notifications.marketing + this.data.notifications.utility;await this.addMessage(`<div class="cost-display"><strong>Notificaciones:</strong> ${total.toLocaleString('es-CO')}/mes<br><strong>Costo:</strong> ${this.formatCurrency(this.costs.notifications)} USD/mes</div>`, true);await this.nextStep();},
-        async stepImplementation() {await this.addMessage(`<p><strong>Paquete implementación</strong> 🛠️</p><p>Pago único para diseño y desarrollo:</p><div class="implementation-cards"><div class="implementation-card" data-impl="A-1400-40-Básico" onclick="window.calculator.selectImplementation(this)"><div class="card-icon">🔄</div><div class="card-title">TIPO A</div><div class="card-subtitle">Flujos simples</div><div class="card-price">$1,400</div><div class="card-hours">40h</div></div><div class="implementation-card" data-impl="B-2800-80-Intermedio" onclick="window.calculator.selectImplementation(this)"><div class="card-icon">🔗</div><div class="card-title">TIPO B</div><div class="card-subtitle">Con APIs</div><div class="card-price">$2,800</div><div class="card-hours">80h</div></div><div class="implementation-card" data-impl="C-4200-120-Avanzado" onclick="window.calculator.selectImplementation(this)"><div class="card-icon">🤖</div><div class="card-title">TIPO C</div><div class="card-subtitle">Con IA</div><div class="card-price">$4,200</div><div class="card-hours">120h</div></div><div class="implementation-card" data-impl="D-custom-custom-Custom" onclick="window.calculator.selectImplementation(this)"><div class="card-icon">⚙️</div><div class="card-title">CUSTOM</div><div class="card-subtitle">A medida</div><div class="card-price">Cotizar</div><div class="card-hours">Variable</div></div></div>`);},
         selectImplementation(card) {card.parentElement.querySelectorAll('.implementation-card').forEach(c =>c.classList.remove('selected'));card.classList.add('selected');const [type, cost, hours, name] = card.dataset.impl.split('-');if (type === 'D') {this.data.implementation = { type, cost: 2800, hours: 80, name: 'Custom' };this.costs.implementation = 2800;} else {this.data.implementation = { type, cost: parseFloat(cost), hours: parseInt(hours), name };this.costs.implementation = parseFloat(cost);}this.implementationContinue();},
         async implementationContinue() {await this.addMessage(`<div class="cost-display"><strong>Implementación:</strong> ${this.data.implementation.name}<br><strong>Horas:</strong> ${this.data.implementation.hours}<br><strong>Costo:</strong> ${this.formatCurrency(this.costs.implementation)} USD</div>`, true);await this.nextStep();},
         async stepSummary() {const monthlyRecurrent = this.costs.channels + this.costs.package + this.costs.insights +this.costs.agents + this.costs.ai.monthly + this.costs.notifications;const oneTime = this.costs.implementation + this.costs.ai.loading;const annualTotal = (monthlyRecurrent * 12) + oneTime;await this.addMessage(`<p>🎉 <strong>Tu cotización personalizada:</strong></p><div class="summary-table"><div class="summary-row"><span>💬 Canales</span><span>${this.formatCurrency(this.costs.channels)}</span></div><div class="summary-row"><span>📦 ${this.data.package.name}</span><span>${this.formatCurrency(this.costs.package)}</span></div><div class="summary-row"><span>📈 Insights</span><span>${this.formatCurrency(this.costs.insights)}</span></div><div class="summary-row"><span>👥 Agentes</span><span>${this.formatCurrency(this.costs.agents)}</span></div><div class="summary-row"><span>🤖 IA</span><span>${this.formatCurrency(this.costs.ai.monthly)}</span></div><div class="summary-row"><span>📢 Notificaciones</span><span>${this.formatCurrency(this.costs.notifications)}</span></div><div class="summary-row"><span><strong>💰 MENSUAL</strong></span><span><strong>${this.formatCurrency(monthlyRecurrent)}</strong></span></div></div><div style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #2c2c2c, #3a3a3a); color: white; border-radius: 12px; text-align: center;"><div style="color: #d4af37; font-size: 0.9rem; margin-bottom: 5px;">🎯 INVERSIÓN PRIMER AÑO</div><div style="font-size: 1.5rem; font-weight: 700; color: #d4af37;">${this.formatCurrency(annualTotal)} USD</div><div style="font-size: 1rem; margin-top: 5px; opacity: 0.9;">${this.formatCurrency(annualTotal * this.data.trm, 'COP')} COP</div><small style="display: block; margin-top: 5px; opacity: 0.7;">TRM: ${this.data.trm}</small></div><div class="button-options" style="margin-top: 15px; justify-content: center;"><button class="option-button" onclick="window.calculator.contactSales()" style="background: linear-gradient(135deg, #d4af37, #b8941f); color: white;">📞 Contactar</button><button class="option-button" onclick="window.calculator.restart()" style="background: linear-gradient(135deg, #2c2c2c, #3a3a3a); color: white;">🔄 Nueva</button></div><div style="margin-top: 15px; padding: 10px; background: #fffbe6; border-radius: 8px; border-left: 3px solid #d4af37;"><p style="margin: 0; color: #2c2c2c; font-size: 0.75rem;"><strong>📋 Notas:</strong> Precios USD • SaaS exento IVA • Soporte 24/7 incluido</p></div>`);this.isFinished = true;}
@@ -609,6 +578,11 @@
     
     document.addEventListener('DOMContentLoaded', () => {
         window.calculator = new AICostCalculator();
+        setTimeout(() => {
+            if (!modalOverlay.classList.contains('visible')) {
+                proactiveMessage.classList.add('visible');
+            }
+        }, 4000);
     });
     </script>
 </body>
