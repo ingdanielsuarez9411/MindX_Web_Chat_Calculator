@@ -692,9 +692,27 @@
 
             <div id="five9ImplementationSection" style="display: none;" class="mb-4 p-3 bg-light border rounded">
                 <h3 class="fs-5">Servicios Profesionales Five9</h3>
-                <p class="text-muted small">Se incluye un costo implícito de servicios profesionales para la implementación de Five9.</p>
-                <div class="text-end">
-                    <strong>Costo (Pago Único): <span class="cost-display" id="five9ProfessionalServicesCost">$4,500.00 USD</span></strong>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                         <thead class="table-dark">
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Valor USD (Pago Único)</th>
+                                <th>Incluir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Instalación y Configuración Five9</td>
+                                <td class="cost-display">$4,500.00</td>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="includeFive9Services" checked disabled>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -810,12 +828,6 @@
                                     <td class="cost-display">$1,700.00 USD</td>
                                     <td><input type="number" class="form-control" id="sbcKhompQty" min="0" value="0" oninput="calculateSBCCosts()"></td>
                                     <td class="cost-display" id="sbcKhompTotal">$0.00 USD</td>
-                                </tr>
-                                <tr>
-                                    <td>Bolsa de 50 horas de implementación SBC</td>
-                                    <td class="cost-display">$2,400.00 USD</td>
-                                    <td><input type="number" class="form-control" id="sbcHoursBagQty" min="0" value="0" oninput="calculateSBCCosts()"></td>
-                                    <td class="cost-display" id="sbcHoursBagTotal">$0.00 USD</td>
                                 </tr>
                                 <tr>
                                     <td>Hora de desarrollo / Implementación adicional SBC</td>
@@ -945,7 +957,6 @@
         // SBC Costs
         let includeSBC = false;
         let sbcKhompQty = 0;
-        let sbcHoursBagQty = 0;
         let sbcAdditionalHoursQty = 0;
         let sbcTotalOneTimeCost = 0;
 
@@ -971,7 +982,6 @@
         const NOTIFICATION_PRICES = { marketing: 0.0150, utility: 0.0024, authentication: 0.0092 };
         const SBC_PRICES = {
             'SBC KHOMP X 30 SESIONES Y SOPORTE 1Y': 1700,
-            'Bolsa de 50 horas de implementación SBC': 2400,
             'Hora de desarrollo / Implementación adicional SBC (COP)': 150000 
         };
 
@@ -1345,11 +1355,9 @@
                 sbcTotalOneTimeCost = 0;
             } else {
                 sbcKhompQty = parseInt(document.getElementById('sbcKhompQty').value) || 0;
-                sbcHoursBagQty = parseInt(document.getElementById('sbcHoursBagQty').value) || 0;
                 sbcAdditionalHoursQty = parseInt(document.getElementById('sbcAdditionalHoursQty').value) || 0;
                 let currentSbcCost = 0;
                 currentSbcCost += sbcKhompQty * SBC_PRICES['SBC KHOMP X 30 SESIONES Y SOPORTE 1Y'];
-                currentSbcCost += sbcHoursBagQty * SBC_PRICES['Bolsa de 50 horas de implementación SBC'];
                 const trm = parseFloat(document.getElementById('trm').value) || TRM_DEFAULT;
                 const sbcAdditionalHoursCostCOP = sbcAdditionalHoursQty * SBC_PRICES['Hora de desarrollo / Implementación adicional SBC (COP)'];
                 const sbcAdditionalHoursCostUSD = sbcAdditionalHoursCostCOP / trm;
@@ -1357,7 +1365,6 @@
                 sbcTotalOneTimeCost = currentSbcCost;
             }
             document.getElementById('sbcKhompTotal').textContent = formatCurrency(sbcKhompQty * SBC_PRICES['SBC KHOMP X 30 SESIONES Y SOPORTE 1Y']);
-            document.getElementById('sbcHoursBagTotal').textContent = formatCurrency(sbcHoursBagQty * SBC_PRICES['Bolsa de 50 horas de implementación SBC']);
             const trm = parseFloat(document.getElementById('trm').value) || TRM_DEFAULT;
             const sbcAdditionalHoursCostCOP = sbcAdditionalHoursQty * SBC_PRICES['Hora de desarrollo / Implementación adicional SBC (COP)'];
             const sbcAdditionalHoursCostUSD = sbcAdditionalHoursCostCOP / trm;
@@ -1485,7 +1492,6 @@
             document.getElementById('customImplementationSection').style.display = 'none';
             document.getElementById('includeSBC').checked = false;
             document.getElementById('sbcKhompQty').value = 0;
-            document.getElementById('sbcHoursBagQty').value = 0;
             document.getElementById('sbcAdditionalHoursQty').value = 0;
             document.getElementById('trm').value = TRM_DEFAULT;
             handleProductSelection();
